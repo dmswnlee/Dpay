@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
 interface FormButtonProps {
-	name: string;
+	text: string;
 }
 
-const FormButton = ({ name }: FormButtonProps) => {
-	return <StyledButton>{name}</StyledButton>;
+const FormButton = ({ text }: FormButtonProps) => {
+	return <StyledButton>{text}</StyledButton>;
 };
 
 export default FormButton;
