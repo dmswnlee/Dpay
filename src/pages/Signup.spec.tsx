@@ -30,7 +30,7 @@ describe("Signup", () => {
 		const { nameInput, idInput, passwordInput, signupButton } = renderComponent();
 
 		userEvent.type(nameInput, "이은주");
-		userEvent.type(idInput, "test123");
+		userEvent.type(idInput, "test123@gmail.com");
 		userEvent.type(passwordInput, "password123");
 		userEvent.click(signupButton);
 
