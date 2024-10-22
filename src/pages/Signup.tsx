@@ -94,7 +94,7 @@ const Signup = () => {
 									},
 									maxLength: {
 										value: 20,
-										message: "이름은 최대 20글자까지 입력 가능합니다.",
+										message: "아이디는 최대 20글자까지 입력 가능합니다.",
 									},
 								})}
 								placeholder="아이디를 입력해주세요."
@@ -152,7 +152,7 @@ const Signup = () => {
 
 export default Signup;
 
-const StyledContainer = styled.div`
+export const StyledContainer = styled.div`
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
@@ -167,29 +167,29 @@ const StyledErrorMessage = styled.span`
 	margin-top: 5px;
 `;
 
-const StyledForm = styled.form`
+export const StyledForm = styled.form`
 	height: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 `;
 
-const StyledFormWrapper = styled.div`
+export const StyledFormWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 30px;
 `;
 
-const StyledInputWrapper = styled.div`
+export const StyledInputWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 `;
 
-const StyledLabel = styled.label`
+export const StyledLabel = styled.label`
 	font-size: 20px;
 `;
 
-const StyledInput = styled.input`
+export const StyledInput = styled.input`
 	outline: none;
 	border: 1px solid #e2e8f0;
 	border-radius: 5px;
