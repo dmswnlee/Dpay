@@ -1,7 +1,14 @@
 import { useForm } from "react-hook-form";
 import OverlayWrapper from "../components/shared/OverlayWrapper";
 import FormButton from "../components/shared/FormButton";
-import { StyledContainer, StyledFormWrapper, StyledInput, StyledInputWrapper, StyledLabel } from "./Signup";
+import {
+	StyledContainer,
+	StyledErrorMessage,
+	StyledFormWrapper,
+	StyledInput,
+	StyledInputWrapper,
+	StyledLabel,
+} from "./Signup";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
 
@@ -43,12 +50,13 @@ const Login = () => {
 								})}
 								placeholder="아이디를 입력해주세요."
 							/>
-							{errors.email && <span>{errors.email.message}</span>}
+							{errors.email && <StyledErrorMessage>{errors.email.message}</StyledErrorMessage>}
 						</StyledInputWrapper>
 						<StyledInputWrapper>
 							<StyledLabel htmlFor="password">비밀번호</StyledLabel>
 							<StyledInput
 								id="password"
+								type="password"
 								{...register("password", {
 									required: "비밀번호를 입력해주세요.",
 									maxLength: {
@@ -58,10 +66,10 @@ const Login = () => {
 								})}
 								placeholder="비밀번호를 입력해주세요."
 							/>
-							{errors.password && <span>{errors.password.message}</span>}
+							{errors.password && <StyledErrorMessage>{errors.password.message}</StyledErrorMessage>}
 						</StyledInputWrapper>
 
-            <StyledButton>아직 회원가입 전 이신가요?</StyledButton>
+						<StyledButton>아직 회원가입 전 이신가요?</StyledButton>
 					</StyledFormWrapper>
 
 					<FormButton text="로그인" />
@@ -91,10 +99,10 @@ const StyledButton = styled.button`
 const StyledLogoWrapper = styled.div`
 	display: flex;
 	justify-content: center;
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 `;
 
-const StyledLogo = styled.img`
+export const StyledLogo = styled.img`
 	width: 94px;
 	height: 46px;
 `;
