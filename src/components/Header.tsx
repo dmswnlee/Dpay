@@ -2,10 +2,25 @@ import styled from "styled-components";
 import logo from "../assets/logo.png";
 import { StyledLogo } from "../pages/Login";
 import { FaHome } from "react-icons/fa";
-import { LuLogIn } from "react-icons/lu";
-import { Link } from "react-router-dom";
+import { LuLogIn, LuLogOut } from "react-icons/lu";
+import { FaRegCircleUser } from "react-icons/fa6";
+import { Link, useNavigate } from "react-router-dom";
+import useAuthStore from "../store/authStore";
+import { useEffect } from "react";
 
 const Header = () => {
+	const { session, initializeSession, logout } = useAuthStore();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		initializeSession();
+	}, [initializeSession]);
+
+	const handleLogout = async () => {
+		await logout();
+		navigate("/");
+	};
+
 	return (
 		<StyledHeaderContainer>
 			<StyledHeaderWrapper>
@@ -18,10 +33,23 @@ const Header = () => {
 							<FaHome />
 							<li>Home</li>
 						</StyledMenuItem>
-						<StyledMenuItem to="/login">
-							<LuLogIn />
-							<li>Login</li>
-						</StyledMenuItem>
+						{session ? (
+							<>
+								<StyledLogout onClick={handleLogout}>
+									<LuLogOut />
+									<li>Logout</li>
+								</StyledLogout>
+								<StyledMenuItem to="/mypage">
+									<FaRegCircleUser />
+									<li>MyPage</li>
+								</StyledMenuItem>
+							</>
+						) : (
+							<StyledMenuItem to="/login">
+								<LuLogIn />
+								<li>Login</li>
+							</StyledMenuItem>
+						)}
 					</StyledMenu>
 				</div>
 			</StyledHeaderWrapper>
@@ -56,6 +84,13 @@ const StyledMenu = styled.ul`
 const StyledMenuItem = styled(Link)`
 	text-decoration: none;
 	color: inherit;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+`;
+
+const StyledLogout = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 10px;
