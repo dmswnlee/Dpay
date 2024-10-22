@@ -62,7 +62,7 @@ const Signup = () => {
 	};
 
 	return (
-		<StyledContainer>
+		<StyledContainer data-testid="signup-page">
 			<OverlayWrapper minHeight="50vh">
 				<StyledForm onSubmit={handleSubmit(onSubmit)}>
 					<StyledFormWrapper>
@@ -123,6 +123,8 @@ const Signup = () => {
 					<FormButton text="가입하기" />
 				</StyledForm>
 			</OverlayWrapper>
+
+			{/* 회원가입 완료 팝업 */}
 			<AlertDialog
 				isOpen={isModalOpen}
 				leastDestructiveRef={cancelRef}
