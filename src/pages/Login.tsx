@@ -11,18 +11,38 @@ import {
 } from "./Signup";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
+
+interface LoginFormData {
+	email: string;
+	password: string;
+}
 
 const Login = () => {
+	const navigate = useNavigate();
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({
+	} = useForm<LoginFormData>({
 		mode: "onChange",
 	});
 
-	const onSubmit = (data: any) => {
-		console.log(data);
+	const onSubmit = async (data: LoginFormData) => {
+		const { email, password } = data;
+
+		const { error } = await supabase.auth.signInWithPassword({
+			email,
+			password,
+		});
+
+		if (error) {
+			console.error("로그인 실패", error.message);
+		} else {
+			navigate("/");
+		}
 	};
 
 	return (
@@ -69,7 +89,9 @@ const Login = () => {
 							{errors.password && <StyledErrorMessage>{errors.password.message}</StyledErrorMessage>}
 						</StyledInputWrapper>
 
-						<StyledButton>아직 회원가입 전 이신가요?</StyledButton>
+						<StyledLink to="/signup">
+							<StyledButton>아직 회원가입 전 이신가요?</StyledButton>
+						</StyledLink>
 					</StyledFormWrapper>
 
 					<FormButton text="로그인" />
@@ -86,6 +108,12 @@ const StyledForm = styled.form`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+`;
+
+const StyledLink = styled(Link)`
+	text-decoration: none;
+	display: flex;
+	justify-content: center;
 `;
 
 const StyledButton = styled.button`
