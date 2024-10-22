@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import Login from "./Login";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -35,6 +36,7 @@ const renderComponent = () => {
 	};
 };
 
+// TODO: logo 이미지 테스트 실패 해결
 describe("login", () => {
 	test("아이디, 비밀번호 입력 후 로그인 버튼 클릭 시 로그인이 된다.", async () => {
 		const { idInput, passwordInput, loginButton } = renderComponent();
@@ -43,7 +45,6 @@ describe("login", () => {
 		userEvent.type(passwordInput, "password123");
 		userEvent.click(loginButton);
 
-		// TODO: 로그인 성공 시 테스트
 		await waitFor(() => {
 			expect(screen.getByTestId("location-display").textContent).toBe("/");
 		});
@@ -66,7 +67,6 @@ describe("login", () => {
 
 		userEvent.click(signupButton);
 
-		// TODO: 회원가입 페이지로 이동하는지 테스트
 		await waitFor(() => {
 			expect(screen.getByTestId("signup-page")).toBeInTheDocument();
 		});
