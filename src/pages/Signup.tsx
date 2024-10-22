@@ -160,7 +160,7 @@ export const StyledContainer = styled.div`
 	align-items: center;
 `;
 
-const StyledErrorMessage = styled.span`
+export const StyledErrorMessage = styled.span`
 	color: red;
 	font-size: 16px;
 	display: block;
