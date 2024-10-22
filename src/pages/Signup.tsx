@@ -167,7 +167,7 @@ const StyledErrorMessage = styled.span`
 	margin-top: 5px;
 `;
 
-export const StyledForm = styled.form`
+const StyledForm = styled.form`
 	height: 100%;
 	display: flex;
 	flex-direction: column;
