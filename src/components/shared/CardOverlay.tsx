@@ -2,10 +2,11 @@ import styled from "styled-components";
 
 interface CardOverlayProps {
 	children: React.ReactNode;
+  onClick?: () => void
 }
 
-const CardOverlay = ({ children }: CardOverlayProps) => {
-	return <StyledCardContainer>{children}</StyledCardContainer>;
+const CardOverlay = ({ children, onClick }: CardOverlayProps) => {
+	return <StyledCardContainer onClick={onClick}>{children}</StyledCardContainer>;
 };
 
 export default CardOverlay;
