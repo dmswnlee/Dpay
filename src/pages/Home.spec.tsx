@@ -17,6 +17,7 @@ const renderComponent = () => {
 	};
 };
 
+// TODO: import.meta.env 테스트 환경 오류 해결
 describe("Home", () => {
 	test("그룹 생성하기 버튼 클릭 시 그룹 생성 페이지로 이동", () => {
 		const { addButton } = renderComponent();
