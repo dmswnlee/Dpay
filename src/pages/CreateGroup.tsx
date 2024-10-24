@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Box, Tag, TagCloseButton, TagLabel } from "@chakra-ui/react";
 import styled from "styled-components";
+import { useGroupStore } from "../store/useGroupStore";
 
 interface CreateGroupData {
 	groupName: string;
@@ -23,26 +24,21 @@ interface CreateGroupData {
 
 const CreateGroup = () => {
 	const navigate = useNavigate();
-	const [tags, setTags] = useState<string[]>([]);
+	const { tags, setGroupName, addTag, removeTag, setDate } = useGroupStore();
 	const [inputValue, setInputValue] = useState("");
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-		setValue,
 	} = useForm<CreateGroupData>({
 		mode: "onChange",
 	});
 
 	const onSubmit = (data: CreateGroupData) => {
-		navigate("/expense", {
-			state: {
-				groupName: data.groupName,
-				tags: tags,
-				date: data.date,
-			},
-		});
+		setGroupName(data.groupName);
+		setDate(data.date);
+		navigate("/expense");
 	};
 
 	const handleAddTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -52,17 +48,13 @@ const CreateGroup = () => {
 
 		if (event.key === " " && inputValue.trim() !== "") {
 			event.preventDefault();
-			const newTags = [...tags, inputValue.trim()];
-			setTags(newTags);
-			setValue("member", newTags);
+			addTag(inputValue.trim());
 			setInputValue("");
 		}
 	};
 
 	const handleRemoveTag = (tagToRemove: string) => {
-		const newTags = tags.filter(tag => tag !== tagToRemove);
-		setTags(newTags);
-		setValue("member", newTags);
+		removeTag(tagToRemove);
 	};
 
 	return (
@@ -109,14 +101,14 @@ const CreateGroup = () => {
 
 						<StyledInputWrapper>
 							<StyledLabel htmlFor="date">모임 날짜를 입력해주세요.</StyledLabel>
-							<StyledInput
-								id="date"
-								type="date"
-								{...register("date", {
-									required: "모임 날짜를 입력해주세요.",
-								})}
-								placeholder="모임 날짜를 입력해주세요."
-							/>
+								<StyledInput
+									id="date"
+									type="date"
+									{...register("date", {
+										required: "모임 날짜를 입력해주세요.",
+									})}
+									placeholder="모임 날짜를 입력해주세요."
+								/>
 							{errors.date && <StyledErrorMessage>{errors.date.message}</StyledErrorMessage>}
 						</StyledInputWrapper>
 					</StyledFormWrapper>
