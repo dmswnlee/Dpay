@@ -19,12 +19,13 @@ import { useGroupStore } from "../store/useGroupStore";
 interface CreateGroupData {
 	groupName: string;
 	member: string[];
-	date: string;
+	startDate: string;
+	endDate: string;
 }
 
 const CreateGroup = () => {
 	const navigate = useNavigate();
-	const { tags, setGroupName, addTag, removeTag, setDate } = useGroupStore();
+	const { tags, setGroupName, addTag, removeTag, setStartDate, setEndDate } = useGroupStore();
 	const [inputValue, setInputValue] = useState("");
 
 	const {
@@ -37,7 +38,8 @@ const CreateGroup = () => {
 
 	const onSubmit = (data: CreateGroupData) => {
 		setGroupName(data.groupName);
-		setDate(data.date);
+		setStartDate(data.startDate);
+		setEndDate(data.endDate);
 		navigate("/expense");
 	};
 
@@ -100,16 +102,29 @@ const CreateGroup = () => {
 						</StyledInputWrapper>
 
 						<StyledInputWrapper>
-							<StyledLabel htmlFor="date">모임 날짜를 입력해주세요.</StyledLabel>
+							<StyledLabel>모임 날짜를 입력해주세요.</StyledLabel>
+							<StyledDateWrapper>
 								<StyledInput
-									id="date"
+									id="startDate"
 									type="date"
-									{...register("date", {
-										required: "모임 날짜를 입력해주세요.",
+									{...register("startDate", {
+										required: "모임 시작 날짜를 입력해주세요.",
 									})}
-									placeholder="모임 날짜를 입력해주세요."
+									placeholder="시작 날짜"
 								/>
-							{errors.date && <StyledErrorMessage>{errors.date.message}</StyledErrorMessage>}
+								<span> ~ </span>
+								<StyledInput
+									id="endDate"
+									type="date"
+									{...register("endDate", {
+										required: "모임 종료 날짜를 입력해주세요.",
+									})}
+									placeholder="종료 날짜"
+								/>
+							</StyledDateWrapper>
+							{(errors.startDate || errors.endDate) && (
+								<StyledErrorMessage>{errors.startDate?.message || errors.endDate?.message}</StyledErrorMessage>
+							)}
 						</StyledInputWrapper>
 					</StyledFormWrapper>
 
@@ -121,6 +136,13 @@ const CreateGroup = () => {
 };
 
 export default CreateGroup;
+
+const StyledDateWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px; /* 입력 필드 사이 간격 조절 */
+`;
 
 const StyledMemberInfo = styled.span`
 	margin-top: 5px;
