@@ -11,7 +11,7 @@ import {
 	StyledLabel,
 } from "./Signup";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Tag, TagCloseButton, TagLabel } from "@chakra-ui/react";
 import styled from "styled-components";
 import { useGroupStore } from "../store/useGroupStore";
@@ -25,7 +25,7 @@ interface CreateGroupData {
 
 const CreateGroup = () => {
 	const navigate = useNavigate();
-	const { tags, setGroupName, addTag, removeTag, setStartDate, setEndDate } = useGroupStore();
+	const { tags, setGroupName, addTag, removeTag, setStartDate, setEndDate, setTags } = useGroupStore();
 	const [inputValue, setInputValue] = useState("");
 
 	const {
@@ -35,6 +35,10 @@ const CreateGroup = () => {
 	} = useForm<CreateGroupData>({
 		mode: "onChange",
 	});
+
+	useEffect(() => {
+		setTags([]);
+	}, [setTags]);
 
 	const onSubmit = (data: CreateGroupData) => {
 		setGroupName(data.groupName);

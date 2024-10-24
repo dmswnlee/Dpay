@@ -8,6 +8,7 @@ interface GroupState {
 	setGroupName: (name: string) => void;
 	addTag: (tag: string) => void;
 	removeTag: (tag: string) => void;
+	setTags: (tags: string[]) => void;
 	setStartDate: (date: string) => void;
 	setEndDate: (date: string) => void;
 }
@@ -20,6 +21,7 @@ export const useGroupStore = create<GroupState>(set => ({
 	setGroupName: name => set({ groupName: name }),
 	addTag: tag => set(state => ({ tags: [...state.tags, tag] })),
 	removeTag: tagToRemove => set(state => ({ tags: state.tags.filter(tag => tag !== tagToRemove) })),
+	setTags: (tags) => set({ tags }),
 	setStartDate: date => set({ startDate: date }),
 	setEndDate: date => set({ endDate: date }),
 }));
