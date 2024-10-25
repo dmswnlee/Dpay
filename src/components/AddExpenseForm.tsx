@@ -4,6 +4,7 @@ import FormButton from "./shared/FormButton";
 import OverlayWrapper from "./shared/OverlayWrapper";
 import { useGroupStore } from "../store/useGroupStore";
 import { useForm } from "react-hook-form";
+import { useExpenseStore } from "../store/useExpenseStore";
 
 interface AddExpenseData {
 	date: string;
@@ -15,6 +16,7 @@ interface AddExpenseData {
 
 const AddExpenseForm = () => {
 	const { tags, startDate } = useGroupStore();
+	const { addExpense } = useExpenseStore();
 
 	const {
 		register,
@@ -25,7 +27,7 @@ const AddExpenseForm = () => {
 	});
 
 	const onSubmit = (data: AddExpenseData) => {
-		console.log("비용 저장 성공", data);
+		addExpense(data);
 	};
 
 	return (
