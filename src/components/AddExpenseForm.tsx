@@ -1,34 +1,113 @@
 import styled from "styled-components";
-import { StyledForm, StyledFormWrapper, StyledInput, StyledInputWrapper } from "../pages/Signup";
+import { StyledErrorMessage, StyledForm, StyledFormWrapper, StyledInputWrapper } from "../pages/Signup";
 import FormButton from "./shared/FormButton";
 import OverlayWrapper from "./shared/OverlayWrapper";
+import { useGroupStore } from "../store/useGroupStore";
+import { useForm } from "react-hook-form";
+
+interface AddExpenseData {
+	date: string;
+	desc: string;
+	memo: string;
+	amount: number;
+	member: string;
+}
 
 const AddExpenseForm = () => {
+	const { tags, startDate } = useGroupStore();
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<AddExpenseData>({
+		mode: "onChange",
+	});
+
+	const onSubmit = (data: AddExpenseData) => {
+		console.log("비용 저장 성공", data);
+	};
+
 	return (
 		<div>
 			<OverlayWrapper minHeight="50vh">
-				<StyledForm>
+				<StyledForm onSubmit={handleSubmit(onSubmit)}>
 					<StyledFormWrapper>
 						<StyledInputWrapper>
-							<StyledInput id="date" type="date" />
+							<StyledExpenseInput
+								id="date"
+								type="date"
+								defaultValue={startDate}
+								{...register("date", {
+									required: "날짜를 입력해주세요.",
+								})}
+							/>
+							{errors.date && <StyledErrorMessage>{errors.date.message}</StyledErrorMessage>}
 						</StyledInputWrapper>
 
 						<StyledInputWrapper>
-							<StyledInput id="desc" placeholder="비용에 대한 설명을 입력해주세요." />
+							<StyledExpenseInput
+								id="desc"
+								{...register("desc", {
+									required: "비용 내용을 입력해주세요.",
+									maxLength: {
+										value: 30,
+										message: "비용 내용은 최대 30글자까지 입력 가능합니다.",
+									},
+								})}
+								placeholder="비용에 대한 설명을 입력해주세요."
+							/>
+							{errors.desc && <StyledErrorMessage>{errors.desc.message}</StyledErrorMessage>}
 						</StyledInputWrapper>
 
 						<StyledInputWrapper>
-							<StyledInput id="memo" placeholder="메모를 입력해주세요." />
+							<StyledExpenseInput
+								id="memo"
+								{...register("memo", {
+									maxLength: {
+										value: 30,
+										message: "메모는 최대 30글자까지 입력 가능합니다.",
+									},
+								})}
+								placeholder="메모를 입력해주세요."
+							/>
+							{errors.memo && <StyledErrorMessage>{errors.memo.message}</StyledErrorMessage>}
 						</StyledInputWrapper>
 
 						<StyledInputWrapper>
 							<StyledPaneWrapper>
-								<StyledAmountInput id="amount" type="number" min={0} placeholder="비용을 입력해주세요." />
-								<StyledMemberSelect defaultValue="">
-									<option value="" disabled>
-										누가 결제 했나요?
-									</option>
-								</StyledMemberSelect>
+								<StyledWrapper>
+									<StyledAmountInput
+										id="amount"
+										type="number"
+										{...register("amount", {
+											required: "1원 이상의 금액을 입력해주세요.",
+											min: {
+												value: 1,
+												message: "금액은 최소 1원 이상이어야 합니다.",
+											},
+										})}
+										placeholder="비용을 입력해주세요."
+									/>
+									{errors.amount && <StyledErrorMessage>{errors.amount.message}</StyledErrorMessage>}
+								</StyledWrapper>
+								<StyledWrapper>
+									<StyledMemberSelect
+										defaultValue=""
+										{...register("member", {
+											required: "결제자를 선택해주세요.",
+										})}>
+										<option value="" disabled>
+											누가 결제 했나요?
+										</option>
+										{tags.map((tag, index) => (
+											<option key={index} value={tag}>
+												{tag}
+											</option>
+										))}
+									</StyledMemberSelect>
+									{errors.member && <StyledErrorMessage>{errors.member.message}</StyledErrorMessage>}
+								</StyledWrapper>
 							</StyledPaneWrapper>
 						</StyledInputWrapper>
 					</StyledFormWrapper>
@@ -42,6 +121,14 @@ const AddExpenseForm = () => {
 
 export default AddExpenseForm;
 
+const StyledExpenseInput = styled.input`
+	outline: none;
+	border: 1px solid #e2e8f0;
+	border-radius: 5px;
+	padding: 20px;
+	font-size: 18px;
+`;
+
 const StyledPaneWrapper = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -49,23 +136,24 @@ const StyledPaneWrapper = styled.div`
 `;
 
 const StyledAmountInput = styled.input`
-	width: 50%;
 	outline: none;
 	border: 1px solid #e2e8f0;
 	border-radius: 5px;
 	padding: 20px;
 	font-size: 18px;
 	margin-top: 15px;
-	::placeholder {
-		color: #a0aec0;
-	}
 `;
 
 const StyledMemberSelect = styled.select`
-	width: 50%;
 	border: 1px solid #e2e8f0;
 	border-radius: 5px;
 	padding: 20px;
 	font-size: 18px;
 	margin-top: 15px;
+`;
+
+const StyledWrapper = styled.div`
+	width: 50%;
+	display: flex;
+	flex-direction: column;
 `;
