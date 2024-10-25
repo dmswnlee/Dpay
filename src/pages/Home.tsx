@@ -78,7 +78,7 @@ export default Home;
 const StyledHomeContainer = styled.div`
 	display: flex;
 	justify-content: center;
-	margin-top: 70px;
+	margin: 70px 0;
 `;
 
 const StyledHomeWrapper = styled.div`
