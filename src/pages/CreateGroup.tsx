@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { Box, Tag, TagCloseButton, TagLabel } from "@chakra-ui/react";
 import styled from "styled-components";
 import { useGroupStore } from "../store/useGroupStore";
+import { supabase } from "../supabaseClient";
+import useAuthStore from "../store/authStore";
 
 interface CreateGroupData {
 	groupName: string;
@@ -40,11 +42,40 @@ const CreateGroup = () => {
 		setTags([]);
 	}, [setTags]);
 
-	const onSubmit = (data: CreateGroupData) => {
+	const onSubmit = async (data: CreateGroupData) => {
+		const { session } = useAuthStore.getState();
+
 		setGroupName(data.groupName);
 		setStartDate(data.startDate);
 		setEndDate(data.endDate);
-		navigate("/expense");
+
+		const userId = session?.user?.id;
+
+		if (!userId) {
+			console.error("로그인된 사용자 정보가 없습니다. 다시 시도해주세요.");
+			return;
+		}
+
+		const { data: groupData, error } = await supabase
+			.from("groups")
+			.insert({
+				group_name: data.groupName,
+				tags,
+				start_date: data.startDate,
+				end_date: data.endDate,
+				created_by: userId,
+			})
+			.select();
+
+		if (error) {
+			console.error("그룹 생성 오류:", error.message);
+			return;
+		}
+
+		if (groupData && groupData.length > 0) {
+			const groupId = groupData[0].id;
+			navigate(`/expense/${groupId}`);
+		}
 	};
 
 	const handleAddTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
