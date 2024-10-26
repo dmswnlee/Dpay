@@ -80,4 +80,13 @@ describe("ExpenseMain", () => {
 			expect(payerErrorMessage).not.toBeInTheDocument();
 		});
 	});
+
+	describe("ExpenseList", () => {
+		test("비용 리스트 컴포넌트가 렌더링 되는가", () => {
+			renderComponent();
+
+			const expenseListComponent = screen.getByTestId("expenseList");
+			expect(expenseListComponent).toBeInTheDocument();
+		});
+	});
 });
