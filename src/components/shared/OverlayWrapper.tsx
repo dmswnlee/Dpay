@@ -3,20 +3,22 @@ import styled from "styled-components";
 interface OverlayWrapperProps {
 	children: React.ReactNode;
 	minHeight: string;
+	width?: string;
 }
 
 interface StyledContainerProps {
 	minHeight: string;
+	width?: string;
 }
 
-const OverlayWrapper = ({ children, minHeight }: OverlayWrapperProps) => {
-	return <StyledContainer minHeight={minHeight}>{children}</StyledContainer>;
+const OverlayWrapper = ({ children, minHeight, width }: OverlayWrapperProps) => {
+	return <StyledContainer width={width} minHeight={minHeight}>{children}</StyledContainer>;
 };
 
 export default OverlayWrapper;
 
 const StyledContainer = styled.div<StyledContainerProps>`
-	width: 50vh;
+	width: ${props => props.width || "50vh"};
 	height: 0;
 	padding: 60px;
 	border-radius: 5px;
