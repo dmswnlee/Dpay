@@ -5,6 +5,9 @@ import OverlayWrapper from "./shared/OverlayWrapper";
 import { useGroupStore } from "../store/useGroupStore";
 import { useForm } from "react-hook-form";
 import { useExpenseStore } from "../store/useExpenseStore";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { supabase } from "../supabaseClient";
 
 interface AddExpenseData {
 	date: string;
@@ -15,7 +18,8 @@ interface AddExpenseData {
 }
 
 const AddExpenseForm = () => {
-	const { tags, startDate } = useGroupStore();
+	const { tags, startDate, setStartDate, setTags } = useGroupStore();
+	const { groupId } = useParams();
 	const { addExpense } = useExpenseStore();
 
 	const {
@@ -25,6 +29,26 @@ const AddExpenseForm = () => {
 	} = useForm<AddExpenseData>({
 		mode: "onChange",
 	});
+
+	useEffect(() => {
+		const fetchGroupInfo = async () => {
+			if (groupId) {
+				const { data, error } = await supabase.from("groups").select("start_date, tags").eq("id", groupId).single();
+
+				if (error) {
+					console.error("그룹 정보를 가져오는 중 오류가 발생했습니다:", error.message);
+					return;
+				}
+
+				if (data) {
+					setStartDate(data.start_date);
+					setTags(data.tags || []);
+				}
+			}
+		};
+
+		fetchGroupInfo();
+	}, [groupId, setStartDate, setTags]);
 
 	const onSubmit = (data: AddExpenseData) => {
 		addExpense(data);
