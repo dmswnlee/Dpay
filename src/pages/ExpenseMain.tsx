@@ -23,7 +23,7 @@ export default ExpenseMain;
 
 const StyledExpenseContainer = styled.div`
 	width: 100vw;
-  display: flex;
+	display: flex;
 	justify-content: center;
 `;
 
@@ -31,5 +31,6 @@ const StyledExpenseWrapper = styled.div`
 	width: 80%;
 	display: flex;
 	justify-content: space-between;
-  margin: 70px 0;
+	gap: 20px;
+	margin: 70px 0;
 `;
