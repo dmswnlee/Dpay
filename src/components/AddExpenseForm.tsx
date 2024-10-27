@@ -50,7 +50,23 @@ const AddExpenseForm = () => {
 		fetchGroupInfo();
 	}, [groupId, setStartDate, setTags]);
 
-	const onSubmit = (data: AddExpenseData) => {
+	const onSubmit = async (data: AddExpenseData) => {
+		const { error } = await supabase.from("expenses").insert([
+			{
+				group_id: groupId,
+				date: data.date,
+				desc: data.desc,
+				memo: data.memo,
+				amount: data.amount,
+				member: data.member,
+			},
+		]);
+
+		if (error) {
+			console.error("비용 저장 중 오류가 발생했습니다:", error.message);
+			return;
+		}
+
 		addExpense(data);
 	};
 
