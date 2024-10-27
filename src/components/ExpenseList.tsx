@@ -10,7 +10,7 @@ import { supabase } from "../supabaseClient";
 
 const ExpenseList = () => {
 	const { groupName, startDate, endDate, setGroupName, setStartDate, setEndDate } = useGroupStore();
-	const { expenses } = useExpenseStore();
+	const { expenses, setExpenses } = useExpenseStore();
 	const { groupId } = useParams();
 
 	useEffect(() => {
@@ -35,8 +35,27 @@ const ExpenseList = () => {
 			}
 		};
 
+		const fetchExpenses = async () => {
+			if (groupId) {
+				const { data, error } = await supabase
+					.from("expenses")
+					.select("*")
+					.eq("group_id", groupId);
+
+				if (error) {
+					console.error("비용 정보를 가져오는 중 오류가 발생했습니다:", error.message);
+					return;
+				}
+
+				if (data) {
+					setExpenses(data);
+				}
+			}
+		};
+
 		fetchGroupInfo();
-	}, [groupId, setGroupName, setStartDate, setEndDate]);
+		fetchExpenses();
+	}, [groupId, setGroupName, setStartDate, setEndDate, setExpenses]);
 
 	return (
 		<StyledContainer>
