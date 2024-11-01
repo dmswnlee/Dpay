@@ -68,7 +68,7 @@ const ExpenseList = () => {
 				</StyledGroupDataWrapper>
 				<StyledTable>
 					<TableContainer>
-						<Table>
+						<Table data-testid="expenseList">
 							<Thead>
 								<Tr>
 									<StyledTh>날짜</StyledTh>
