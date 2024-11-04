@@ -4,6 +4,7 @@ import { HiDownload } from "react-icons/hi";
 import { useRef } from "react";
 import { useExpenseStore } from "../store/useExpenseStore";
 import { useGroupStore } from "../store/useGroupStore";
+import { toPng } from 'html-to-image';
 
 interface Expense {
 	member: string;
@@ -85,18 +86,35 @@ export const calculateMinimumTransaction = (
 };
 
 const SettlementSummary = () => {
-	const wrapperElement = useRef(null);
+	const wrapperElement = useRef<HTMLDivElement>(null);
 	const { expenses } = useExpenseStore();
 	const { tags } = useGroupStore();
 	const members = tags.length > 0 ? tags : [];
 
-	const totalExpenseAmount = parseFloat(
-		expenses.reduce((prevAmount, curExpense) => prevAmount + parseFloat(curExpense.amount), 0),
-	);
+	const totalExpenseAmount = expenses.reduce((prevAmount, curExpense) => prevAmount + curExpense.amount, 0);
 	const groupMembersCount = members ? members.length : 0;
 	const splitAmount = totalExpenseAmount / groupMembersCount;
 
 	const minimumTransaction = calculateMinimumTransaction(expenses, members, splitAmount);
+
+  const exportToImage = () => {
+		if (wrapperElement.current === null) {
+			return;
+		}
+
+		toPng(wrapperElement.current, {
+			filter: node => node.tagName !== "BUTTON",
+		})
+			.then(dataURL => {
+				const link = document.createElement("a");
+        link.href = dataURL;
+				link.download = "settlement-summary.png";
+				link.click();
+			})
+			.catch(err => {
+				console.error("이미지를 다운로드하는 중 오류가 발생했습니다:", err);
+			});
+	};
 
 	return (
 		<StyledContainer ref={wrapperElement}>
@@ -110,16 +128,16 @@ const SettlementSummary = () => {
 						<StyledDivider></StyledDivider>
 						<StyledUl>
 							{minimumTransaction.map(({ sender, receiver, amount }, index) => (
-								<li key={`transaction-${index}`}>
+								<StyledLi key={`transaction-${index}`}>
 									<span>
 										{sender}(이)가 {receiver}에게 {amount}원 보내기
 									</span>
-								</li>
+								</StyledLi>
 							))}
 						</StyledUl>
 					</StyledWrapper>
 				)}
-				<StyledButton>
+				<StyledButton data-testid="btn-download" onClick={exportToImage}>
 					<HiDownload />
 				</StyledButton>
 			</OverlayWrapper>
@@ -171,7 +189,7 @@ const StyledDivider = styled.div`
 `;
 
 const StyledUl = styled.ul`
-	padding: 20px;
+	padding: 0 20px;
 	margin: 0;
 	font-weight: 600;
 
@@ -185,4 +203,8 @@ const StyledUl = styled.ul`
 			opacity: 0;
 		}
 	}
+`;
+
+const StyledLi = styled.li`
+	margin-top: 20px;
 `;
