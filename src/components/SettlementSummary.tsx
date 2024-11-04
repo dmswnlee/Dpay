@@ -4,7 +4,7 @@ import { HiDownload } from "react-icons/hi";
 import { useRef } from "react";
 import { useExpenseStore } from "../store/useExpenseStore";
 import { useGroupStore } from "../store/useGroupStore";
-import { toPng } from 'html-to-image';
+import { toPng } from "html-to-image";
 
 interface Expense {
 	member: string;
@@ -65,7 +65,7 @@ export const calculateMinimumTransaction = (
 			minTransactions.push({
 				receiver: toReceive.member,
 				sender: toSend.member,
-				amount: amountToReceive,
+				amount: Math.floor(amountToReceive / 10) * 10,
 			});
 			toReceive.amount = 0;
 			toSend.amount -= amountToReceive;
@@ -74,7 +74,7 @@ export const calculateMinimumTransaction = (
 			minTransactions.push({
 				receiver: toReceive.member,
 				sender: toSend.member,
-				amount: amountToSend,
+				amount: Math.floor(amountToSend / 10) * 10,
 			});
 			toSend.amount = 0;
 			toReceive.amount += amountToSend;
@@ -91,13 +91,14 @@ const SettlementSummary = () => {
 	const { tags } = useGroupStore();
 	const members = tags.length > 0 ? tags : [];
 
-	const totalExpenseAmount = expenses.reduce((prevAmount, curExpense) => prevAmount + curExpense.amount, 0);
+	const totalExpenseAmount =
+		Math.floor(expenses.reduce((prevAmount, curExpense) => prevAmount + curExpense.amount, 0) / 10) * 10;
 	const groupMembersCount = members ? members.length : 0;
-	const splitAmount = totalExpenseAmount / groupMembersCount;
+	const splitAmount = Math.floor(totalExpenseAmount / groupMembersCount / 10) * 10;
 
 	const minimumTransaction = calculateMinimumTransaction(expenses, members, splitAmount);
 
-  const exportToImage = () => {
+	const exportToImage = () => {
 		if (wrapperElement.current === null) {
 			return;
 		}
@@ -107,7 +108,7 @@ const SettlementSummary = () => {
 		})
 			.then(dataURL => {
 				const link = document.createElement("a");
-        link.href = dataURL;
+				link.href = dataURL;
 				link.download = "settlement-summary.png";
 				link.click();
 			})
