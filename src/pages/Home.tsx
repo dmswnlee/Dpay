@@ -16,6 +16,7 @@ import {
 import { supabase } from "../supabaseClient";
 import { FaRegCalendarAlt, FaMoneyBill } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
+import { format } from 'date-fns';
 
 interface Group {
 	id: string;
@@ -99,6 +100,11 @@ const Home = () => {
 		}
 	};
 
+	const formatDate = (dateString: string) => {
+		const date = new Date(dateString);
+		return format(date, "yy.MM.dd");
+	};
+
 	return (
 		<StyledHomeContainer>
 			<StyledHomeWrapper>
@@ -113,7 +119,7 @@ const Home = () => {
 							<StyledTitle>{group.group_name}</StyledTitle>
 							<StyledContent>
 								<FaRegCalendarAlt />
-								<p>모임 날짜 : {`${group.start_date} ~ ${group.end_date}`}</p>
+								<p>모임 날짜 : {`${formatDate(group.start_date)} ~ ${formatDate(group.end_date)}`}</p>
 							</StyledContent>
 							<StyledContent>
 								<FaUserGroup />
