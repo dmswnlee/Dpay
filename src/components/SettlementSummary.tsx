@@ -91,10 +91,9 @@ const SettlementSummary = () => {
 	const { tags } = useGroupStore();
 	const members = tags.length > 0 ? tags : [];
 
-	const totalExpenseAmount =
-		Math.floor(expenses.reduce((prevAmount, curExpense) => prevAmount + curExpense.amount, 0) / 10) * 10;
+	const totalExpenseAmount = expenses.reduce((prevAmount, curExpense) => prevAmount + curExpense.amount, 0);
 	const groupMembersCount = members ? members.length : 0;
-	const splitAmount = Math.floor(totalExpenseAmount / groupMembersCount / 10) * 10;
+	const splitAmount = Math.floor((totalExpenseAmount / groupMembersCount) / 10) * 10;
 
 	const minimumTransaction = calculateMinimumTransaction(expenses, members, splitAmount);
 
