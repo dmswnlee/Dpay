@@ -17,11 +17,26 @@ import { supabase } from "../supabaseClient";
 import { FaRegCalendarAlt, FaMoneyBill } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
 
+interface Group {
+	id: string;
+	group_name: string;
+	start_date: string;
+	end_date: string;
+	tags: string[];
+}
+
+interface Expense {
+	date: string;
+	desc: string;
+	amount: number;
+	member: string;
+}
+
 const Home = () => {
 	const { session, initializeSession } = useAuthStore();
 	const [isOpen, setIsOpen] = useState(false);
-	const [groups, setGroups] = useState([]);
-	const [expenses, setExpenses] = useState({});
+	const [groups, setGroups] = useState<Group[]>([]);
+	const [expenses, setExpenses] = useState<Record<string, Expense[]>>({});
 	const cancelRef = useRef(null);
 	const navigate = useNavigate();
 
@@ -38,7 +53,7 @@ const Home = () => {
 		fetchUserSessionAndGroups();
 	}, []);
 
-	const fetchGroups = async userId => {
+	const fetchGroups = async (userId: string) => {
 		const { data, error } = await supabase
 			.from("groups")
 			.select("id, group_name, start_date, end_date, tags")
@@ -53,7 +68,7 @@ const Home = () => {
 		data.forEach(group => fetchExpensesForGroup(group.id));
 	};
 
-	const fetchExpensesForGroup = async groupId => {
+	const fetchExpensesForGroup = async (groupId: string) => {
 		const { data, error } = await supabase
 			.from("expenses")
 			.select("date, desc, amount, member")
