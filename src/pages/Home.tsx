@@ -106,7 +106,7 @@ const Home = () => {
 	};
 
 	return (
-		<StyledHomeContainer>
+		<StyledHomeContainer data-testid="group-container">
 			<StyledHomeWrapper>
 				<CardOverlay onClick={handleAddGroup}>
 					<FiPlus />
