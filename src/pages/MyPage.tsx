@@ -9,30 +9,64 @@ import FormButton from "../components/shared/FormButton";
 import useAuthStore from "../store/authStore";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
+import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+
+interface Group {
+	id: string;
+	group_name: string;
+	start_date: string;
+	end_date: string;
+	tags: string[];
+}
 
 const MyPage = () => {
 	const { initializeSession } = useAuthStore();
 	const [userName, setUserName] = useState("");
+	const [groups, setGroups] = useState<Group[]>([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		const fetchUserName = async () => {
+		const fetchUserNameAndGroups = async () => {
 			await initializeSession();
 			const userSession = useAuthStore.getState().session;
+
 			if (userSession) {
-				const { data, error } = await supabase
+				const { data: userData, error: userError } = await supabase
 					.from("profiles")
 					.select("name")
 					.eq("id", userSession.user.id)
 					.single();
-				if (error) {
-					console.error("사용자 이름을 가져오는 중 오류 발생:", error.message);
+				if (userError) {
+					console.error("사용자 이름을 가져오는 중 오류 발생:", userError.message);
 				} else {
-					setUserName(data.name);
+					setUserName(userData.name);
+				}
+
+				const { data: groupData, error: groupError } = await supabase
+					.from("groups")
+					.select("id, group_name, start_date, end_date, tags")
+					.eq("created_by", userSession.user.id);
+
+				if (groupError) {
+					console.error("그룹 데이터를 가져오는 중 오류 발생:", groupError.message);
+				} else {
+					setGroups(groupData || []);
 				}
 			}
 		};
-		fetchUserName();
+
+		fetchUserNameAndGroups();
 	}, []);
+
+	const formatDate = (dateString: string) => {
+		const date = new Date(dateString);
+		return format(date, "yy.MM.dd");
+	};
+
+	const handleClick = () => {
+		navigate("/create");
+	};
 
 	return (
 		<StyledContainer data-testid="maypage-container">
@@ -43,34 +77,40 @@ const MyPage = () => {
 					</StyledUser>
 					<div>
 						<StyledTitle>지난 모임 내역</StyledTitle>
-						<StyledCard>
-							<div>
-								<StyledGroupName>노른자들의 여행</StyledGroupName>
-								<StyledContent>
-									<FaRegCalendarAlt />
-									<p>모임 날짜 : 24.09.15 ~ 24.09.17 </p>
-								</StyledContent>
-								<StyledContent>
-									<FaUserGroup />
-									<p>모임 멤버 : 은주, 은영, 소라</p>
-								</StyledContent>
-								<StyledContent>
-									<FaMoneyBill />
-									<p>한 사람 당 지출 금액 : 55,000원</p>
-								</StyledContent>
-							</div>
-							<StyledButtonGroup>
-								<StyledButtonWrapper>
-									<RiDeleteBin5Line />
-								</StyledButtonWrapper>
-								<StyledButtonWrapper>
-									<MdOutlineMoreVert />
-								</StyledButtonWrapper>
-							</StyledButtonGroup>
-						</StyledCard>
+						<StyledScrollableContainer>
+							{groups.map(group => (
+								<StyledCard key={group.id}>
+									<div>
+										<StyledGroupName>{group.group_name}</StyledGroupName>
+										<StyledContent>
+											<FaRegCalendarAlt />
+											<p>
+												모임 날짜 : {formatDate(group.start_date)} ~ {formatDate(group.end_date)}
+											</p>
+										</StyledContent>
+										<StyledContent>
+											<FaUserGroup />
+											<p>모임 멤버 : {group.tags.join(", ")}</p>
+										</StyledContent>
+										<StyledContent>
+											<FaMoneyBill />
+											<p>한 사람 당 지출 금액 : 55,000원</p>
+										</StyledContent>
+									</div>
+									<StyledButtonGroup>
+										<StyledButtonWrapper>
+											<RiDeleteBin5Line />
+										</StyledButtonWrapper>
+										<StyledButtonWrapper onClick={() => navigate(`/expense/${group.id}`)}>
+											<MdOutlineMoreVert />
+										</StyledButtonWrapper>
+									</StyledButtonGroup>
+								</StyledCard>
+							))}
+						</StyledScrollableContainer>
 					</div>
 					<StyledAddButtonWrapper>
-						<FormButton text="생성하기" />
+						<FormButton text="생성하기" onClick={handleClick} />
 					</StyledAddButtonWrapper>
 				</StyledUserContainer>
 			</OverlayWrapper>
@@ -79,6 +119,12 @@ const MyPage = () => {
 };
 
 export default MyPage;
+
+const StyledScrollableContainer = styled.div`
+	max-height: 380px;
+	overflow-y: auto;
+	margin-top: 10px;
+`;
 
 const StyledUserContainer = styled.div`
 	display: flex;
