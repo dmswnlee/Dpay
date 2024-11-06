@@ -7,10 +7,19 @@ import { MdOutlineMoreVert } from "react-icons/md";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import FormButton from "../components/shared/FormButton";
 import useAuthStore from "../store/authStore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import {
+	AlertDialog,
+	AlertDialogBody,
+	AlertDialogContent,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogOverlay,
+	Button,
+} from "@chakra-ui/react";
 
 interface Group {
 	id: string;
@@ -24,6 +33,8 @@ const MyPage = () => {
 	const { initializeSession } = useAuthStore();
 	const [userName, setUserName] = useState("");
 	const [groups, setGroups] = useState<Group[]>([]);
+	const [deleteGroupId, setDeleteGroupId] = useState<string | null>(null);
+	const cancelRef = useRef(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -64,6 +75,30 @@ const MyPage = () => {
 		return format(date, "yy.MM.dd");
 	};
 
+	const onOpen = (groupId: string) => {
+		setDeleteGroupId(groupId);
+	};
+
+	const onClose = () => {
+		setDeleteGroupId(null);
+	};
+
+	const handleConfirmDelete = async () => {
+		if (!deleteGroupId) return;
+
+		const { error } = await supabase
+			.from("groups")
+			.delete()
+			.eq("id", deleteGroupId);
+
+		if (error) {
+			console.error("모임 삭제 중 오류가 발생했습니다:", error.message);
+		} else {
+			setGroups(prevGroups => prevGroups.filter(group => group.id !== deleteGroupId));
+		}
+		onClose();
+	};
+
 	const handleClick = () => {
 		navigate("/create");
 	};
@@ -98,7 +133,7 @@ const MyPage = () => {
 										</StyledContent>
 									</div>
 									<StyledButtonGroup>
-										<StyledButtonWrapper>
+										<StyledButtonWrapper onClick={() => onOpen(group.id)}>
 											<RiDeleteBin5Line />
 										</StyledButtonWrapper>
 										<StyledButtonWrapper onClick={() => navigate(`/expense/${group.id}`)}>
@@ -114,6 +149,31 @@ const MyPage = () => {
 					</StyledAddButtonWrapper>
 				</StyledUserContainer>
 			</OverlayWrapper>
+
+			<AlertDialog
+				isOpen={deleteGroupId !== null}
+				leastDestructiveRef={cancelRef}
+				onClose={onClose}
+				isCentered>
+				<AlertDialogOverlay>
+					<AlertDialogContent>
+						<AlertDialogHeader fontSize="lg" fontWeight="bold">
+							모임 삭제
+						</AlertDialogHeader>
+						<AlertDialogBody>
+							정말로 이 모임을 삭제하시겠습니까? <br />이 작업은 되돌릴 수 없습니다.
+						</AlertDialogBody>
+						<AlertDialogFooter>
+							<Button ref={cancelRef} onClick={onClose} border="none" cursor="pointer">
+								취소
+							</Button>
+							<Button colorScheme="red" onClick={handleConfirmDelete} ml={3} border="none" cursor="pointer">
+								삭제
+							</Button>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialogOverlay>
+			</AlertDialog>
 		</StyledContainer>
 	);
 };
