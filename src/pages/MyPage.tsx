@@ -1,7 +1,118 @@
-const MyPage = () => {
-  return (
-    <div>MyPage</div>
-  )
-}
+import styled from "styled-components";
+import OverlayWrapper from "../components/shared/OverlayWrapper";
+import { StyledContainer } from "./Signup";
+import { FaRegCalendarAlt, FaMoneyBill } from "react-icons/fa";
+import { FaUserGroup } from "react-icons/fa6";
+import { MdOutlineMoreVert } from "react-icons/md";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import FormButton from "../components/shared/FormButton";
 
-export default MyPage
+const MyPage = () => {
+	return (
+		<StyledContainer data-testid="maypage-container">
+			<OverlayWrapper minHeight="50vh">
+				<StyledUserContainer>
+					<StyledUser>
+						안녕하세요.<StyledName>은주</StyledName>님!
+					</StyledUser>
+					<div>
+						<StyledTitle>지난 모임 내역</StyledTitle>
+						<StyledCard>
+							<div>
+								<StyledGroupName>노른자들의 여행</StyledGroupName>
+								<StyledContent>
+									<FaRegCalendarAlt />
+									<p>모임 날짜 : 24.09.15 ~ 24.09.17 </p>
+								</StyledContent>
+								<StyledContent>
+									<FaUserGroup />
+									<p>모임 멤버 : 은주, 은영, 소라</p>
+								</StyledContent>
+								<StyledContent>
+									<FaMoneyBill />
+									<p>한 사람 당 지출 금액 : 55,000원</p>
+								</StyledContent>
+							</div>
+							<StyledButtonGroup>
+								<StyledButtonWrapper>
+									<RiDeleteBin5Line />
+								</StyledButtonWrapper>
+								<StyledButtonWrapper>
+									<MdOutlineMoreVert />
+								</StyledButtonWrapper>
+							</StyledButtonGroup>
+						</StyledCard>
+					</div>
+					<StyledAddButtonWrapper>
+						<FormButton text="생성하기" />
+					</StyledAddButtonWrapper>
+				</StyledUserContainer>
+			</OverlayWrapper>
+		</StyledContainer>
+	);
+};
+
+export default MyPage;
+
+const StyledUserContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+`;
+
+const StyledUser = styled.div`
+	display: flex;
+	justify-content: flex-end;
+	font-size: 28px;
+`;
+
+const StyledName = styled.span`
+	color: #3d8bfd;
+`;
+
+const StyledTitle = styled.p`
+	font-size: 24px;
+`;
+
+const StyledCard = styled.div`
+	height: 150px;
+	background-color: #edf2f7;
+	border-radius: 5px;
+	padding: 20px;
+	margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
+`;
+
+const StyledGroupName = styled.p`
+	font-size: 20px;
+`;
+const StyledContent = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 16px;
+	margin-top: 10px;
+`;
+
+const StyledButtonGroup = styled.div`
+	display: flex;
+	gap: 10px;
+`;
+
+const StyledButtonWrapper = styled.div`
+	width: 30px;
+	height: 30px;
+	background-color: #ffffff;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+`;
+
+const StyledAddButtonWrapper = styled.div`
+	width: 83%;
+	position: fixed;
+	bottom: 50px;
+`;
