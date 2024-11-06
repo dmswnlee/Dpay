@@ -6,14 +6,40 @@ import { FaUserGroup } from "react-icons/fa6";
 import { MdOutlineMoreVert } from "react-icons/md";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import FormButton from "../components/shared/FormButton";
+import useAuthStore from "../store/authStore";
+import { useEffect, useState } from "react";
+import { supabase } from "../supabaseClient";
 
 const MyPage = () => {
+	const { initializeSession } = useAuthStore();
+	const [userName, setUserName] = useState("");
+
+	useEffect(() => {
+		const fetchUserName = async () => {
+			await initializeSession();
+			const userSession = useAuthStore.getState().session;
+			if (userSession) {
+				const { data, error } = await supabase
+					.from("profiles")
+					.select("name")
+					.eq("id", userSession.user.id)
+					.single();
+				if (error) {
+					console.error("사용자 이름을 가져오는 중 오류 발생:", error.message);
+				} else {
+					setUserName(data.name);
+				}
+			}
+		};
+		fetchUserName();
+	}, []);
+
 	return (
 		<StyledContainer data-testid="maypage-container">
 			<OverlayWrapper minHeight="50vh">
 				<StyledUserContainer>
 					<StyledUser>
-						안녕하세요.<StyledName>은주</StyledName>님!
+						안녕하세요.<StyledName>{userName}</StyledName>님!
 					</StyledUser>
 					<div>
 						<StyledTitle>지난 모임 내역</StyledTitle>
