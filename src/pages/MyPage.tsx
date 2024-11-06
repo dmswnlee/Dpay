@@ -75,7 +75,6 @@ const StyledTitle = styled.p`
 `;
 
 const StyledCard = styled.div`
-	height: 150px;
 	background-color: #edf2f7;
 	border-radius: 5px;
 	padding: 20px;
@@ -97,18 +96,26 @@ const StyledContent = styled.div`
 
 const StyledButtonGroup = styled.div`
 	display: flex;
-	gap: 10px;
+	gap: 20px;
 `;
 
-const StyledButtonWrapper = styled.div`
+const StyledButtonWrapper = styled.button`
 	width: 30px;
 	height: 30px;
 	background-color: #ffffff;
 	border-radius: 50%;
+	border: none;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	font-size: 20px;
+	cursor: pointer;
+	transition: all 150ms ease-out;
+	&:hover {
+		background-color: #3d8bfd;
+		transform: rotate(15deg) scale(1.2);
+		color: #ffffff;
+	}
 `;
 
 const StyledAddButtonWrapper = styled.div`
