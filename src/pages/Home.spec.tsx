@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Home from "./Home";
 import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
 
 const renderComponent = () => {
 	render(
@@ -24,4 +25,11 @@ describe("Home", () => {
 
 		userEvent.click(addButton);
 	});
+
+	test("생성된 그룹 목록이 렌더링 되는가", () => {
+		renderComponent();
+
+		const groupContainer = screen.getByTestId("group-container");
+    expect(groupContainer).toBeInTheDocument();
+	})
 });
