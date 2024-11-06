@@ -2,10 +2,11 @@ import styled from "styled-components";
 
 interface FormButtonProps {
 	text: string;
+	onClick?: () => void;
 }
 
-const FormButton = ({ text }: FormButtonProps) => {
-	return <StyledButton>{text}</StyledButton>;
+const FormButton = ({ text, onClick }: FormButtonProps) => {
+	return <StyledButton onClick={onClick}>{text}</StyledButton>;
 };
 
 export default FormButton;
