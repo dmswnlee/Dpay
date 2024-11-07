@@ -184,6 +184,20 @@ const StyledScrollableContainer = styled.div`
 	max-height: 380px;
 	overflow-y: auto;
 	margin-top: 10px;
+	scrollbar-gutter: stable both-edges;
+
+	&::-webkit-scrollbar {
+		width: 0.5rem;
+	}
+	
+	&::-webkit-scrollbar-track {
+		background: #f1f1f1;
+	}
+	
+	&::-webkit-scrollbar-thumb {
+		background-color: #3d8bfd; 
+    border-radius: 10px;
+	}
 `;
 
 const StyledUserContainer = styled.div`
