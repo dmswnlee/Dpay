@@ -16,7 +16,8 @@ import {
 import { supabase } from "../supabaseClient";
 import { FaRegCalendarAlt, FaMoneyBill } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
-import { format } from 'date-fns';
+import { format } from "date-fns";
+import LoadingSpinner from "../components/shared/LoadingSpinner";
 
 interface Group {
 	id: string;
@@ -38,17 +39,20 @@ const Home = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [groups, setGroups] = useState<Group[]>([]);
 	const [expenses, setExpenses] = useState<Record<string, Expense[]>>({});
+	const [isLoading, setIsLoading] = useState(true);
 	const cancelRef = useRef(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchUserSessionAndGroups = async () => {
+			setIsLoading(true);
 			await initializeSession();
 			const userSession = useAuthStore.getState().session;
 
 			if (userSession) {
-				fetchGroups(userSession.user.id);
+				await fetchGroups(userSession.user.id);
 			}
+			setIsLoading(false);
 		};
 
 		fetchUserSessionAndGroups();
@@ -66,7 +70,7 @@ const Home = () => {
 		}
 		setGroups(data || []);
 
-		data.forEach(group => fetchExpensesForGroup(group.id));
+		await Promise.all(data.map(group => fetchExpensesForGroup(group.id)));
 	};
 
 	const fetchExpensesForGroup = async (groupId: string) => {
@@ -76,7 +80,7 @@ const Home = () => {
 			.eq("group_id", groupId);
 
 		if (error) {
-			console.error("비용 데이터를 불러오는 중 오류가 발생했습니다:", error.message);
+			console.error("데이터를 불러오는 중 오류가 발생했습니다:", error.message);
 			return;
 		}
 
@@ -104,6 +108,10 @@ const Home = () => {
 		const date = new Date(dateString);
 		return format(date, "yy.MM.dd");
 	};
+
+	if (isLoading) {
+		return <LoadingSpinner />;
+	}
 
 	return (
 		<StyledHomeContainer data-testid="group-container">

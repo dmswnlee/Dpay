@@ -20,6 +20,7 @@ import {
 	AlertDialogOverlay,
 	Button,
 } from "@chakra-ui/react";
+import LoadingSpinner from '../components/shared/LoadingSpinner';
 
 interface Group {
 	id: string;
@@ -34,11 +35,13 @@ const MyPage = () => {
 	const [userName, setUserName] = useState("");
 	const [groups, setGroups] = useState<Group[]>([]);
 	const [deleteGroupId, setDeleteGroupId] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 	const cancelRef = useRef(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchUserNameAndGroups = async () => {
+			setIsLoading(true);
 			await initializeSession();
 			const userSession = useAuthStore.getState().session;
 
@@ -65,6 +68,7 @@ const MyPage = () => {
 					setGroups(groupData || []);
 				}
 			}
+			setIsLoading(false);
 		};
 
 		fetchUserNameAndGroups();
@@ -102,6 +106,10 @@ const MyPage = () => {
 	const handleClick = () => {
 		navigate("/create");
 	};
+
+	if (isLoading) {
+    return <LoadingSpinner />; 
+  }
 
 	return (
 		<StyledContainer data-testid="maypage-container">
