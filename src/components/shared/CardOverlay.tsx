@@ -12,8 +12,9 @@ const CardOverlay = ({ children, onClick }: CardOverlayProps) => {
 export default CardOverlay;
 
 const StyledCardContainer = styled.div`
-	width: 25%;
-	height: 250px;
+	width: 100%;
+	min-height: 240px;
+	padding: 20px;
 	border-radius: 5px;
 	background-color: #ffffff;
 	filter: drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1));

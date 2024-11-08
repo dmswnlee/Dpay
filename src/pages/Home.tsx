@@ -123,15 +123,16 @@ const Home = () => {
 
 				{groups.map(group => (
 					<CardOverlay key={group.id} onClick={() => navigate(`/expense/${group.id}`)}>
-						<div>
+						<StyledContentWrapper>
 							<StyledTitle>{group.group_name}</StyledTitle>
+							<StyledDivider></StyledDivider>
 							<StyledContent>
 								<FaRegCalendarAlt />
 								<p>모임 날짜 : {`${formatDate(group.start_date)} ~ ${formatDate(group.end_date)}`}</p>
 							</StyledContent>
 							<StyledContent>
 								<FaUserGroup />
-								<p>모임 멤버 : {group.tags.join(", ")}</p>
+								<StyledMemberList>모임 멤버 : {group.tags.join(", ")}</StyledMemberList>
 							</StyledContent>
 							<StyledExpenseContainer>
 								<StyledExpenseTitle>
@@ -152,7 +153,7 @@ const Home = () => {
 									))
 								)}
 							</StyledExpenseContainer>
-						</div>
+						</StyledContentWrapper>
 					</CardOverlay>
 				))}
 
@@ -185,49 +186,96 @@ const Home = () => {
 export default Home;
 
 const StyledHomeContainer = styled.div`
+	width: 100%;
 	display: flex;
 	justify-content: center;
-	padding: 70px 0;
+	padding: 20px;
 `;
 
 const StyledHomeWrapper = styled.div`
-	width: 80%;
-	display: flex;
-	justify-content: space-between;
-	gap: 50px;
-	flex-wrap: wrap;
+	width: 100%;
+	max-width: 1400px;
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+	gap: 20px;
+
+	@media (min-width: 768px) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	@media (min-width: 1024px) {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+`;
+
+const StyledContentWrapper = styled.div`
+	width: 100%;
 `;
 
 const StyledAddButton = styled.button`
 	border: none;
 	background-color: transparent;
-	font-size: 20px;
+	font-size: 16px;
 	cursor: pointer;
+
+	@media (min-width: 1024px) {
+		font-size: 20px;
+	}
 `;
 
 const StyledTitle = styled.h3`
-	font-size: 24px;
+	font-size: 20px;
 	font-weight: 600;
 	margin: 0;
+
+	@media (min-width: 1024px) {
+		font-size: 24px;
+	}
 `;
 
-const StyledContent = styled.div`
-	font-size: 20px;
-	margin: 0;
-	display: flex;
-	align-items: center;
-	gap: 10px;
+const StyledDivider = styled.div`
+	width: 100%;
+	height: 1px;
+	background-color: #a0aec0;
 	margin-top: 10px;
 `;
 
+const StyledContent = styled.div`
+	font-size: 16px;
+	margin: 0;
+	display: grid;
+	grid-template-columns: auto 1fr;
+	align-items: center;
+	gap: 10px;
+	margin-top: 10px;
+	width: 100%;
+
+	@media (min-width: 1024px) {
+		font-size: 20px;
+	}
+`;
+
+const StyledMemberList = styled.p`
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin: 0;
+	min-width: 0;
+`;
+
 const StyledExpenseContainer = styled.div`
-	font-size: 20px;
+	width: 100%;
+	font-size: 16px;
 	margin: 0;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	gap: 10px;
 	margin-top: 10px;
+
+	@media (min-width: 1024px) {
+		font-size: 20px;
+	}
 `;
 
 const StyledExpenseTitle = styled.div`

@@ -60,15 +60,16 @@ const Header = () => {
 export default Header;
 
 const StyledHeaderContainer = styled.div`
-	width: 100vw;
+	width: 100%;
 	background-color: #ffffff;
-	padding: 10px;
+	padding: 20px;
 	display: flex;
 	justify-content: center;
 `;
 
 const StyledHeaderWrapper = styled.div`
-	width: 80%;
+	width: 100%;
+	max-width: 1400px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -88,6 +89,15 @@ const StyledMenuItem = styled(Link)`
 	align-items: center;
 	gap: 10px;
 	cursor: pointer;
+	li {
+		display: none;
+	}
+
+	li {
+		@media (min-width: 1024px) {
+			display: block;
+		}
+	}
 `;
 
 const StyledLogout = styled.div`
@@ -95,4 +105,13 @@ const StyledLogout = styled.div`
 	align-items: center;
 	gap: 10px;
 	cursor: pointer;
+	li {
+		display: none;
+	}
+
+	li {
+		@media (min-width: 1024px) {
+			display: block;
+		}
+	}
 `;
