@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { StyledErrorMessage, StyledForm, StyledFormWrapper, StyledInputWrapper } from "../pages/Signup";
+import { StyledErrorMessage, StyledInputWrapper } from "../pages/Signup";
 import FormButton from "./shared/FormButton";
 import OverlayWrapper from "./shared/OverlayWrapper";
 import { useGroupStore } from "../store/useGroupStore";
@@ -8,6 +8,7 @@ import { useExpenseStore } from "../store/useExpenseStore";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "../supabaseClient";
+import { useBreakpointValue } from "@chakra-ui/react";
 
 interface AddExpenseData {
 	date: string;
@@ -21,6 +22,9 @@ const AddExpenseForm = () => {
 	const { tags, startDate, setStartDate, setTags } = useGroupStore();
 	const { groupId } = useParams();
 	const { addExpense } = useExpenseStore();
+
+	const overlayHeight = useBreakpointValue({ base: "0", lg: "50vh" });
+	const overlayWidth = useBreakpointValue({ base: "90vw", md: "50vw", lg: "50vh" });
 
 	const {
 		register,
@@ -71,8 +75,8 @@ const AddExpenseForm = () => {
 	};
 
 	return (
-		<div>
-			<OverlayWrapper minHeight="50vh">
+		<OverlayWrapper width={overlayWidth} minHeight={overlayHeight}>
+			<StyledExpenseWrapper>
 				<StyledForm onSubmit={handleSubmit(onSubmit)}>
 					<StyledFormWrapper>
 						<StyledInputWrapper>
@@ -156,42 +160,91 @@ const AddExpenseForm = () => {
 
 					<FormButton text="추가하기" />
 				</StyledForm>
-			</OverlayWrapper>
-		</div>
+			</StyledExpenseWrapper>
+		</OverlayWrapper>
 	);
 };
 
 export default AddExpenseForm;
 
+const StyledExpenseWrapper = styled.div`
+	padding: 20px;
+
+	@media (min-width: 1024px) {
+		padding: 60px;
+	}
+`;
+
+const StyledFormWrapper = styled.div`
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	@media (min-width: 1024px) {
+		gap: 30px;
+	}
+`;
+
+const StyledForm = styled.form`
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	@media (min-width: 1024px) {
+		gap: 30px;
+		justify-content: space-between;
+	}
+`;
+
 const StyledExpenseInput = styled.input`
 	outline: none;
 	border: 1px solid #e2e8f0;
 	border-radius: 5px;
-	padding: 20px;
-	font-size: 18px;
+	padding: 10px;
+	font-size: 14px;
+
+	@media (min-width: 1024px) {
+		padding: 20px;
+		font-size: 18px;
+	}
 `;
 
 const StyledPaneWrapper = styled.div`
 	display: flex;
 	justify-content: space-between;
-	gap: 20px;
+	gap: 5px;
+
+	@media (min-width: 1024px) {
+		gap: 20px;
+	}
 `;
 
 const StyledAmountInput = styled.input`
 	outline: none;
 	border: 1px solid #e2e8f0;
 	border-radius: 5px;
-	padding: 20px;
-	font-size: 18px;
-	margin-top: 15px;
+	padding: 10px;
+	font-size: 14px;
+
+	@media (min-width: 1024px) {
+		padding: 20px;
+		font-size: 18px;
+		margin-top: 15px;
+	}
 `;
 
 const StyledMemberSelect = styled.select`
 	border: 1px solid #e2e8f0;
 	border-radius: 5px;
-	padding: 20px;
-	font-size: 18px;
-	margin-top: 15px;
+	padding: 10px;
+	font-size: 14px;
+
+	@media (min-width: 1024px) {
+		padding: 20px;
+		font-size: 18px;
+		margin-top: 15px;
+	}
 `;
 
 const StyledWrapper = styled.div`

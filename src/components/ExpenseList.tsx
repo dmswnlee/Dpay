@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { StyledContainer } from "../pages/Signup";
 import { useGroupStore } from "../store/useGroupStore";
 import OverlayWrapper from "./shared/OverlayWrapper";
-import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Table, TableContainer, Tbody, Td, Th, Thead, Tr, useBreakpointValue } from "@chakra-ui/react";
 import { useExpenseStore } from "../store/useExpenseStore";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
@@ -12,6 +11,10 @@ const ExpenseList = () => {
 	const { groupName, startDate, endDate, setGroupName, setStartDate, setEndDate } = useGroupStore();
 	const { expenses, setExpenses } = useExpenseStore();
 	const { groupId } = useParams();
+
+	const tableSize = useBreakpointValue({ base: "sm", md:"md", lg: "lg" });
+	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "75vh" });
+	const overlayHeight = useBreakpointValue({ base: "100%", md:"50vh", lg: "100vh" });
 
 	useEffect(() => {
 		const fetchGroupInfo = async () => {
@@ -37,10 +40,7 @@ const ExpenseList = () => {
 
 		const fetchExpenses = async () => {
 			if (groupId) {
-				const { data, error } = await supabase
-					.from("expenses")
-					.select("*")
-					.eq("group_id", groupId);
+				const { data, error } = await supabase.from("expenses").select("*").eq("group_id", groupId);
 
 				if (error) {
 					console.error("비용 정보를 가져오는 중 오류가 발생했습니다:", error.message);
@@ -58,8 +58,8 @@ const ExpenseList = () => {
 	}, [groupId, setGroupName, setStartDate, setEndDate, setExpenses]);
 
 	return (
-		<StyledContainer>
-			<OverlayWrapper width="75vh" minHeight="100vh">
+		<OverlayWrapper width={overlayWidth} minHeight={overlayHeight}>
+			<StyledTableWrapper>
 				<StyledGroupDataWrapper>
 					<StyledGroupName>{groupName}</StyledGroupName>
 					<StyledGroupDate>
@@ -67,8 +67,8 @@ const ExpenseList = () => {
 					</StyledGroupDate>
 				</StyledGroupDataWrapper>
 				<StyledTable>
-					<TableContainer>
-						<Table data-testid="expenseList">
+					<StyledTableContainer>
+						<Table data-testid="expenseList" size={tableSize}>
 							<Thead>
 								<Tr>
 									<StyledTh>날짜</StyledTh>
@@ -90,30 +90,51 @@ const ExpenseList = () => {
 								))}
 							</Tbody>
 						</Table>
-					</TableContainer>
+					</StyledTableContainer>
 				</StyledTable>
-			</OverlayWrapper>
-		</StyledContainer>
+			</StyledTableWrapper>
+		</OverlayWrapper>
 	);
 };
 
 export default ExpenseList;
 
+const StyledTableWrapper = styled.div`
+	padding: 20px;
+
+	@media (min-width: 1024px) {
+		padding: 60px;
+	}
+`;
+
 const StyledGroupDataWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	align-items: center;
 	gap: 10px;
 `;
 
 const StyledGroupName = styled.p`
-	margin: 0;
-	font-size: 24px;
+	font-size: 20px;
+
+	@media (min-width: 1024px) {
+		font-size: 24px;
+	}
 `;
 
 const StyledGroupDate = styled.p`
-	margin: 0;
-	font-size: 16px;
+	font-size: 12px;
+
+	@media (min-width: 1024px) {
+		font-size: 16px;
+	}
+`;
+
+const StyledTableContainer = styled(TableContainer)`
+	overflow-x: auto;
+	width: 100%;
+	max-width: 100%;
 `;
 
 const StyledTable = styled.div`

@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { useExpenseStore } from "../store/useExpenseStore";
 import { useGroupStore } from "../store/useGroupStore";
 import { toPng } from "html-to-image";
+import { useBreakpointValue } from '@chakra-ui/react';
 
 interface Expense {
 	member: string;
@@ -91,9 +92,12 @@ const SettlementSummary = () => {
 	const { tags } = useGroupStore();
 	const members = tags.length > 0 ? tags : [];
 
+	const overlayHeight = useBreakpointValue({ base: "0", lg: "50vh" });
+	const overlayWidth = useBreakpointValue({ base: "90vw", md: "50vw", lg: "50vh" });
+
 	const totalExpenseAmount = expenses.reduce((prevAmount, curExpense) => prevAmount + curExpense.amount, 0);
 	const groupMembersCount = members ? members.length : 0;
-	const splitAmount = Math.floor((totalExpenseAmount / groupMembersCount) / 10) * 10;
+	const splitAmount = Math.floor(totalExpenseAmount / groupMembersCount / 10) * 10;
 
 	const minimumTransaction = calculateMinimumTransaction(expenses, members, splitAmount);
 
@@ -118,28 +122,30 @@ const SettlementSummary = () => {
 
 	return (
 		<StyledContainer ref={wrapperElement}>
-			<OverlayWrapper minHeight="50vh">
-				<StyledTitle>정산 결과</StyledTitle>
-				{totalExpenseAmount > 0 && groupMembersCount > 0 && (
-					<StyledWrapper>
-						<span>멤버 수: {groupMembersCount}명</span>
-						<span>총 지출 금액 : {totalExpenseAmount}원</span>
-						<span>한 사람당 지출 금액 : {splitAmount}원</span>
-						<StyledDivider></StyledDivider>
-						<StyledUl>
-							{minimumTransaction.map(({ sender, receiver, amount }, index) => (
-								<StyledLi key={`transaction-${index}`}>
-									<span>
-										{sender}(이)가 {receiver}에게 {amount}원 보내기
-									</span>
-								</StyledLi>
-							))}
-						</StyledUl>
-					</StyledWrapper>
-				)}
-				<StyledButton data-testid="btn-download" onClick={exportToImage}>
-					<HiDownload />
-				</StyledButton>
+			<OverlayWrapper width={overlayWidth} minHeight={overlayHeight}>
+				<StyledSettlementWrapper>
+					<StyledTitle>정산 결과</StyledTitle>
+					{totalExpenseAmount > 0 && groupMembersCount > 0 && (
+						<StyledWrapper>
+							<span>멤버 수: {groupMembersCount}명</span>
+							<span>총 지출 금액 : {totalExpenseAmount}원</span>
+							<span>한 사람당 지출 금액 : {splitAmount}원</span>
+							<StyledDivider></StyledDivider>
+							<StyledUl>
+								{minimumTransaction.map(({ sender, receiver, amount }, index) => (
+									<StyledLi key={`transaction-${index}`}>
+										<span>
+											{sender}(이)가 {receiver}에게 {amount}원 보내기
+										</span>
+									</StyledLi>
+								))}
+							</StyledUl>
+						</StyledWrapper>
+					)}
+					<StyledButton data-testid="btn-download" onClick={exportToImage}>
+						<HiDownload />
+					</StyledButton>
+				</StyledSettlementWrapper>
 			</OverlayWrapper>
 		</StyledContainer>
 	);
@@ -150,35 +156,44 @@ export default SettlementSummary;
 const StyledContainer = styled.div`
 	margin-top: 20px;
 	position: relative;
+
+	@media (min-width: 768px) {
+		margin-top: 0;
+	}
+
+	@media (min-width: 1024px) {
+		margin-top: 20px;
+	}
+`;
+
+const StyledSettlementWrapper = styled.div`
+	padding: 20px;
+
+	@media (min-width: 1024px) {
+		padding: 60px;
+	}
+`;
+
+const StyledTitle = styled.p`
+	font-size: 20px;
+	text-align: center;
+
+	@media (min-width: 1024px) {
+		font-size: 24px;
+	}
 `;
 
 const StyledWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
-	font-size: 20px;
-	gap: 20px;
-	margin-top: 30px;
-`;
+	font-size: 16px;
+	gap: 10px;
+	margin-top: 20px;
 
-const StyledTitle = styled.p`
-	margin: 0;
-	font-size: 24px;
-	text-align: center;
-`;
-
-const StyledButton = styled.button`
-	background: none;
-	border: none;
-	font-size: 25px;
-	position: absolute;
-	bottom: 15px;
-	right: 15px;
-	cursor: pointer;
-
-	&:hover,
-	&:active {
-		background: none;
-		color: #3d8bfd;
+	@media (min-width: 1024px) {
+		font-size: 20px;
+		gap: 20px;
+		margin-top: 30px;
 	}
 `;
 
@@ -190,7 +205,6 @@ const StyledDivider = styled.div`
 
 const StyledUl = styled.ul`
 	padding: 0 20px;
-	margin: 0;
 	font-weight: 600;
 
 	list-style-type: disclosure-closed;
@@ -206,5 +220,29 @@ const StyledUl = styled.ul`
 `;
 
 const StyledLi = styled.li`
-	margin-top: 20px;
+	margin-top: 10px;
+
+	@media (min-width: 1024px) {
+		margin-top: 20px;
+	}
+`;
+
+const StyledButton = styled.button`
+	background: none;
+	border: none;
+	font-size: 20px;
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+	cursor: pointer;
+
+	&:hover,
+	&:active {
+		background: none;
+		color: #3d8bfd;
+	}
+
+	@media (min-width: 1024px) {
+		font-size: 24px;
+	}
 `;

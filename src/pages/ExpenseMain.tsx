@@ -7,10 +7,10 @@ const ExpenseMain = () => {
 	return (
 		<StyledExpenseContainer>
 			<StyledExpenseWrapper>
-				<div>
+				<StyledLeft>
 					<AddExpenseForm />
 					<SettlementSummary />
-				</div>
+				</StyledLeft>
 				<div>
 					<ExpenseList />
 				</div>
@@ -22,15 +22,35 @@ const ExpenseMain = () => {
 export default ExpenseMain;
 
 const StyledExpenseContainer = styled.div`
-	width: 100vw;
+	width: 100%;
 	display: flex;
 	justify-content: center;
 `;
 
 const StyledExpenseWrapper = styled.div`
-	width: 80%;
+	width: 100%;
+	max-width: 1400px;
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
+	align-items: center;
 	gap: 20px;
-	margin: 70px 0;
+	padding: 20px;
+
+	@media (min-width: 1024px) {
+		flex-direction: row;
+		padding: 20px 0;
+	}
 `;
+
+const StyledLeft = styled.div`
+@media (min-width: 768px) {
+	width: 100%;
+	display: flex;
+	gap: 10px;
+}
+
+@media (min-width: 1024px) {
+	flex-direction: column;
+	gap: 0;
+}
+`
