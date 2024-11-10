@@ -25,7 +25,7 @@ const StyledButton = styled.button`
 		filter: brightness(0.8);
 	}
 
-	@media (min-width: 1024px) {
+	@media (min-width: 768px) {
 		height: 60px;
 		font-size: 18px;
 	}
