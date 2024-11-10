@@ -19,8 +19,9 @@ import {
 	AlertDialogHeader,
 	AlertDialogOverlay,
 	Button,
+	useBreakpointValue,
 } from "@chakra-ui/react";
-import LoadingSpinner from '../components/shared/LoadingSpinner';
+import LoadingSpinner from "../components/shared/LoadingSpinner";
 
 interface Group {
 	id: string;
@@ -38,6 +39,9 @@ const MyPage = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const cancelRef = useRef(null);
 	const navigate = useNavigate();
+
+	const overlayHeight = useBreakpointValue({ base: "100%", lg: "50vh" });
+	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "60vh" });
 
 	useEffect(() => {
 		const fetchUserNameAndGroups = async () => {
@@ -90,10 +94,7 @@ const MyPage = () => {
 	const handleConfirmDelete = async () => {
 		if (!deleteGroupId) return;
 
-		const { error } = await supabase
-			.from("groups")
-			.delete()
-			.eq("id", deleteGroupId);
+		const { error } = await supabase.from("groups").delete().eq("id", deleteGroupId);
 
 		if (error) {
 			console.error("모임 삭제 중 오류가 발생했습니다:", error.message);
@@ -108,12 +109,12 @@ const MyPage = () => {
 	};
 
 	if (isLoading) {
-    return <LoadingSpinner />; 
-  }
+		return <LoadingSpinner />;
+	}
 
 	return (
 		<StyledContainer data-testid="maypage-container">
-			<OverlayWrapper minHeight="50vh">
+			<OverlayWrapper width={overlayWidth} minHeight={overlayHeight}>
 				<StyledUserContainer>
 					<StyledUser>
 						안녕하세요.<StyledName>{userName}</StyledName>님!
@@ -124,7 +125,17 @@ const MyPage = () => {
 							{groups.map(group => (
 								<StyledCard key={group.id}>
 									<div>
-										<StyledGroupName>{group.group_name}</StyledGroupName>
+										<StyledTop>
+											<StyledGroupName>{group.group_name}</StyledGroupName>
+											<StyledButtonGroup>
+												<StyledButtonWrapper onClick={() => onOpen(group.id)}>
+													<RiDeleteBin5Line />
+												</StyledButtonWrapper>
+												<StyledButtonWrapper onClick={() => navigate(`/expense/${group.id}`)}>
+													<MdOutlineMoreVert />
+												</StyledButtonWrapper>
+											</StyledButtonGroup>
+										</StyledTop>
 										<StyledContent>
 											<FaRegCalendarAlt />
 											<p>
@@ -140,14 +151,6 @@ const MyPage = () => {
 											<p>한 사람 당 지출 금액 : 55,000원</p>
 										</StyledContent>
 									</div>
-									<StyledButtonGroup>
-										<StyledButtonWrapper onClick={() => onOpen(group.id)}>
-											<RiDeleteBin5Line />
-										</StyledButtonWrapper>
-										<StyledButtonWrapper onClick={() => navigate(`/expense/${group.id}`)}>
-											<MdOutlineMoreVert />
-										</StyledButtonWrapper>
-									</StyledButtonGroup>
 								</StyledCard>
 							))}
 						</StyledScrollableContainer>
@@ -158,11 +161,7 @@ const MyPage = () => {
 				</StyledUserContainer>
 			</OverlayWrapper>
 
-			<AlertDialog
-				isOpen={deleteGroupId !== null}
-				leastDestructiveRef={cancelRef}
-				onClose={onClose}
-				isCentered>
+			<AlertDialog isOpen={deleteGroupId !== null} leastDestructiveRef={cancelRef} onClose={onClose} isCentered>
 				<AlertDialogOverlay>
 					<AlertDialogContent>
 						<AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -191,33 +190,47 @@ export default MyPage;
 const StyledScrollableContainer = styled.div`
 	max-height: 380px;
 	overflow-y: auto;
-	margin-top: 10px;
 	scrollbar-gutter: stable both-edges;
 
 	&::-webkit-scrollbar {
 		width: 0.5rem;
 	}
-	
+
 	&::-webkit-scrollbar-track {
 		background: #f1f1f1;
 	}
-	
+
 	&::-webkit-scrollbar-thumb {
-		background-color: #3d8bfd; 
-    border-radius: 10px;
+		background-color: #3d8bfd;
+		border-radius: 10px;
+	}
+
+	@media (min-width: 768px) {
+		margin-top: 10px;
 	}
 `;
 
 const StyledUserContainer = styled.div`
+	height: 600px;
 	display: flex;
 	flex-direction: column;
+	padding: 20px;
 	gap: 20px;
+
+	@media (min-width: 768px) {
+		height: 700px;
+		padding: 60px;
+	}
 `;
 
 const StyledUser = styled.div`
 	display: flex;
 	justify-content: flex-end;
-	font-size: 28px;
+	font-size: 24px;
+
+	@media (min-width: 768px) {
+		font-size: 28px;
+	}
 `;
 
 const StyledName = styled.span`
@@ -225,7 +238,11 @@ const StyledName = styled.span`
 `;
 
 const StyledTitle = styled.p`
-	font-size: 24px;
+	font-size: 20px;
+
+	@media (min-width: 768px) {
+		font-size: 24px;
+	}
 `;
 
 const StyledCard = styled.div`
@@ -233,22 +250,36 @@ const StyledCard = styled.div`
 	border-radius: 5px;
 	padding: 20px;
 	margin-top: 20px;
-	display: flex;
-	justify-content: space-between;
 `;
 
+const StyledTop = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+`
+
 const StyledGroupName = styled.p`
-	font-size: 20px;
+	font-size: 18px;
+
+	@media (min-width: 768px) {
+		font-size: 20px;
+	}
 `;
 const StyledContent = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	font-size: 16px;
+	font-size: 14px;
 	margin-top: 10px;
+
+	@media (min-width: 768px) {
+		font-size: 16px;
+	}
 `;
 
 const StyledButtonGroup = styled.div`
+	width: 80px;
+	height: 30px;
 	display: flex;
 	gap: 20px;
 `;
@@ -262,7 +293,7 @@ const StyledButtonWrapper = styled.button`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 20px;
+	font-size: 18px;
 	cursor: pointer;
 	transition: all 150ms ease-out;
 	&:hover {
@@ -270,10 +301,19 @@ const StyledButtonWrapper = styled.button`
 		transform: rotate(15deg) scale(1.2);
 		color: #ffffff;
 	}
+
+	@media (min-width: 768px) {
+		font-size: 20px;
+	}
 `;
 
 const StyledAddButtonWrapper = styled.div`
-	width: 83%;
+	width: 90%;
 	position: fixed;
-	bottom: 50px;
+	bottom:20px;
+
+	@media (min-width: 768px) {
+		width: 83%;
+		bottom: 60px;
+	}
 `;
