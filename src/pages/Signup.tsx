@@ -13,6 +13,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogOverlay,
 	Button,
+	useBreakpointValue,
 } from "@chakra-ui/react";
 
 interface SignupFormData {
@@ -25,6 +26,9 @@ const Signup = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const navigate = useNavigate();
 	const cancelRef = useRef(null);
+
+	const overlayHeight = useBreakpointValue({ base: "100%", lg: "50vh" });
+	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "60vh" });
 
 	const {
 		register,
@@ -63,7 +67,7 @@ const Signup = () => {
 
 	return (
 		<StyledContainer data-testid="signup-page">
-			<OverlayWrapper minHeight="50vh">
+			<OverlayWrapper width={overlayWidth} minHeight={overlayHeight}>
 				<StyledForm onSubmit={handleSubmit(onSubmit)}>
 					<StyledFormWrapper>
 						<StyledInputWrapper>
@@ -131,8 +135,7 @@ const Signup = () => {
 				onClose={handleModalClose}
 				isCentered
 				motionPreset="slideInBottom"
-				useInert={false}
-				>
+				useInert={false}>
 				<AlertDialogOverlay />
 				<AlertDialogContent>
 					<AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -158,20 +161,35 @@ export const StyledContainer = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	padding: 0 20px;
+
+	@media (min-width: 768px) {
+		padding: 0;
+	}
 `;
 
 export const StyledErrorMessage = styled.span`
 	color: red;
-	font-size: 16px;
+	font-size: 12px;
 	display: block;
 	margin-top: 5px;
+
+	@media (min-width: 768px) {
+		font-size: 16px;
+	}
 `;
 
 export const StyledForm = styled.form`
-	height: 100%;
+	height: 450px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	padding: 20px;
+
+	@media (min-width: 768px) {
+		height: 700px;
+		padding: 60px;
+	}
 `;
 
 export const StyledFormWrapper = styled.div`
@@ -186,17 +204,27 @@ export const StyledInputWrapper = styled.div`
 `;
 
 export const StyledLabel = styled.label`
-	font-size: 20px;
+	font-size: 16px;
+
+	@media (min-width: 768px) {
+		font-size: 20px;
+	}
 `;
 
 export const StyledInput = styled.input`
 	outline: none;
 	border: 1px solid #e2e8f0;
 	border-radius: 5px;
-	padding: 20px;
-	font-size: 18px;
-	margin-top: 15px;
+	padding: 10px;
+	font-size: 14px;
+	margin-top: 5px;
 	::placeholder {
 		color: #a0aec0;
+	}
+
+	@media (min-width: 768px) {
+		padding: 20px;
+		font-size: 18px;
+		margin-top: 15px;
 	}
 `;
