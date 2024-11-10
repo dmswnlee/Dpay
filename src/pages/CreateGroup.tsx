@@ -4,7 +4,6 @@ import OverlayWrapper from "../components/shared/OverlayWrapper";
 import {
 	StyledContainer,
 	StyledErrorMessage,
-	StyledForm,
 	StyledFormWrapper,
 	StyledInput,
 	StyledInputWrapper,
@@ -12,7 +11,7 @@ import {
 } from "./Signup";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Box, Tag, TagCloseButton, TagLabel } from "@chakra-ui/react";
+import { Box, Tag, TagCloseButton, TagLabel, useBreakpointValue } from "@chakra-ui/react";
 import styled from "styled-components";
 import { useGroupStore } from "../store/useGroupStore";
 import { supabase } from "../supabaseClient";
@@ -29,6 +28,10 @@ const CreateGroup = () => {
 	const navigate = useNavigate();
 	const { tags, setGroupName, addTag, removeTag, setStartDate, setEndDate, setTags } = useGroupStore();
 	const [inputValue, setInputValue] = useState("");
+
+	const overlayHeight = useBreakpointValue({ base: "100%", lg: "50vh" });
+	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "60vh" });
+	const tagSize = useBreakpointValue({ base: "sm", lg: "lg" });
 
 	const {
 		register,
@@ -96,75 +99,79 @@ const CreateGroup = () => {
 
 	return (
 		<StyledContainer>
-			<OverlayWrapper minHeight="50vh">
-				<StyledForm onSubmit={handleSubmit(onSubmit)}>
-					<StyledFormWrapper>
-						<StyledInputWrapper>
-							<StyledLabel htmlFor="groupName">당신의 모임 이름은 무엇인가요?</StyledLabel>
-							<StyledInput
-								id="groupName"
-								{...register("groupName", {
-									required: "모임 이름을 입력해주세요.",
-									maxLength: {
-										value: 20,
-										message: "모임 이름은 최대 20글자까지 입력 가능합니다.",
-									},
-								})}
-								placeholder="모임 이름을 입력해주세요."
-							/>
-							{errors.groupName && <StyledErrorMessage>{errors.groupName.message}</StyledErrorMessage>}
-						</StyledInputWrapper>
-
-						<StyledInputWrapper>
-							<StyledLabel htmlFor="member">모임의 멤버를 입력해주세요.</StyledLabel>
-							<Box>
-								{tags.map((tag, index) => (
-									<Tag key={index} colorScheme="blue" size="lg" mr={2} mt={2}>
-										<TagLabel>{tag}</TagLabel>
-										<TagCloseButton onClick={() => handleRemoveTag(tag)} border="none" />
-									</Tag>
-								))}
-							</Box>
-							<StyledInput
-								id="member"
-								value={inputValue}
-								onChange={e => setInputValue(e.target.value)}
-								onKeyDown={handleAddTag}
-								placeholder="모임 멤버를 입력해주세요."
-							/>
-							<StyledMemberInfo>* 모임멤버 입력 후 스페이스바를 누르면 추가할 수 있습니다😉</StyledMemberInfo>
-							{errors.member && <StyledErrorMessage>{errors.member.message}</StyledErrorMessage>}
-						</StyledInputWrapper>
-
-						<StyledInputWrapper>
-							<StyledLabel>모임 날짜를 입력해주세요.</StyledLabel>
-							<StyledDateWrapper>
+			<OverlayWrapper width={overlayWidth} minHeight={overlayHeight}>
+				<StyledCreateWrapper>
+					<StyledForm onSubmit={handleSubmit(onSubmit)}>
+						<StyledFormWrapper>
+							<StyledInputWrapper>
+								<StyledLabel htmlFor="groupName">당신의 모임 이름은 무엇인가요?</StyledLabel>
 								<StyledInput
-									id="startDate"
-									type="date"
-									{...register("startDate", {
-										required: "모임 시작 날짜를 입력해주세요.",
+									id="groupName"
+									{...register("groupName", {
+										required: "모임 이름을 입력해주세요.",
+										maxLength: {
+											value: 20,
+											message: "모임 이름은 최대 20글자까지 입력 가능합니다.",
+										},
 									})}
-									placeholder="시작 날짜"
+									placeholder="모임 이름을 입력해주세요."
 								/>
-								<span> ~ </span>
-								<StyledInput
-									id="endDate"
-									type="date"
-									{...register("endDate", {
-										required: "모임 종료 날짜를 입력해주세요.",
-									})}
-									placeholder="종료 날짜"
-								/>
-							</StyledDateWrapper>
-							{(errors.startDate || errors.endDate) && (
-								<StyledErrorMessage>{errors.startDate?.message || errors.endDate?.message}</StyledErrorMessage>
-							)}
-						</StyledInputWrapper>
-					</StyledFormWrapper>
+								{errors.groupName && <StyledErrorMessage>{errors.groupName.message}</StyledErrorMessage>}
+							</StyledInputWrapper>
 
-					<FormButton text="생성하기" />
-				</StyledForm>
+							<StyledInputWrapper>
+								<StyledLabel htmlFor="member">모임의 멤버를 입력해주세요.</StyledLabel>
+								<Box>
+									{tags.map((tag, index) => (
+										<Tag key={index} colorScheme="blue" size={tagSize} mr={2} mt={2}>
+											<TagLabel>{tag}</TagLabel>
+											<TagCloseButton onClick={() => handleRemoveTag(tag)} border="none" />
+										</Tag>
+									))}
+								</Box>
+								<StyledInput
+									id="member"
+									value={inputValue}
+									onChange={e => setInputValue(e.target.value)}
+									onKeyDown={handleAddTag}
+									placeholder="모임 멤버를 입력해주세요."
+								/>
+								<StyledMemberInfo>* 모임멤버 입력 후 스페이스바를 누르면 추가할 수 있습니다😉</StyledMemberInfo>
+								{errors.member && <StyledErrorMessage>{errors.member.message}</StyledErrorMessage>}
+							</StyledInputWrapper>
+
+							<StyledInputWrapper>
+								<StyledLabel>모임 날짜를 입력해주세요.</StyledLabel>
+								<StyledDateWrapper>
+									<StyledInput
+										id="startDate"
+										type="date"
+										{...register("startDate", {
+											required: "모임 시작 날짜를 입력해주세요.",
+										})}
+										placeholder="시작 날짜"
+									/>
+									<StyledSpan> ~ </StyledSpan>
+									<StyledInput
+										id="endDate"
+										type="date"
+										{...register("endDate", {
+											required: "모임 종료 날짜를 입력해주세요.",
+										})}
+										placeholder="종료 날짜"
+									/>
+								</StyledDateWrapper>
+								{(errors.startDate || errors.endDate) && (
+									<StyledErrorMessage>
+										{errors.startDate?.message || errors.endDate?.message}
+									</StyledErrorMessage>
+								)}
+							</StyledInputWrapper>
+						</StyledFormWrapper>
+
+						<FormButton text="생성하기" />
+					</StyledForm>
+				</StyledCreateWrapper>
 			</OverlayWrapper>
 		</StyledContainer>
 	);
@@ -172,11 +179,38 @@ const CreateGroup = () => {
 
 export default CreateGroup;
 
+const StyledCreateWrapper = styled.div`
+	height: 600px;
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+
+	@media (min-width: 768px) {
+		height: 700px;
+		padding: 60px;
+	}
+`;
+
+const StyledForm = styled.form`
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+`;
+
 const StyledDateWrapper = styled.div`
 	display: flex;
-	align-items: center;
+	flex-direction: column;
 	justify-content: space-between;
-	gap: 10px;
+
+	@media (min-width: 768px) {
+		align-items: center;
+		flex-direction: row;
+	}
+`;
+
+const StyledSpan = styled.span`
+	text-align: center;
 `;
 
 const StyledMemberInfo = styled.span`
