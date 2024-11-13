@@ -10,6 +10,7 @@ import CreateGroup from "./pages/CreateGroup.tsx";
 import ExpenseMain from "./pages/ExpenseMain.tsx";
 import MyPage from "./pages/MyPage.tsx";
 import NotFound from "./components/NotFound.tsx";
+import RequireAuth from './components/RequireAuth.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -19,9 +20,14 @@ const router = createBrowserRouter([
 			{ index: true, element: <Home /> },
 			{ path: "signup", element: <Signup /> },
 			{ path: "login", element: <Login /> },
-			{ path: "create", element: <CreateGroup /> },
-			{ path: "expense/:groupId", element: <ExpenseMain /> },
-			{ path: "mypage", element: <MyPage /> },
+			{
+				element: <RequireAuth />, 
+				children: [
+					{ path: "create", element: <CreateGroup /> },
+					{ path: "expense/:groupId", element: <ExpenseMain /> },
+					{ path: "mypage", element: <MyPage /> },
+				],
+			},
 			{ path: "*", element: <NotFound /> },
 		],
 	},
