@@ -95,7 +95,7 @@ const Login = () => {
 							</StyledInputWrapper>
 
 							<StyledLink to="/signup">
-								<StyledButton>아직 회원가입 전 이신가요?</StyledButton>
+								<StyledButton type="button">아직 회원가입 전 이신가요?</StyledButton>
 							</StyledLink>
 						</StyledFormWrapper>
 
