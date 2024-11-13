@@ -20,6 +20,7 @@ interface SignupFormData {
 	name: string;
 	email: string;
 	password: string;
+	confirmPassword: string;
 }
 
 const Signup = () => {
@@ -33,10 +34,13 @@ const Signup = () => {
 	const {
 		register,
 		handleSubmit,
+		watch,
 		formState: { errors },
 	} = useForm<SignupFormData>({
 		mode: "onChange",
 	});
+
+	const password = watch("password");
 
 	const onSubmit = async (data: SignupFormData) => {
 		const { name, email, password } = data;
@@ -54,7 +58,6 @@ const Signup = () => {
 			if (profileError) {
 				console.error("프로필 저장 오류:", profileError.message);
 			} else {
-				//alert("회원가입이 완료되었습니다");
 				setIsModalOpen(true);
 			}
 		}
@@ -113,6 +116,10 @@ const Signup = () => {
 								type="password"
 								{...register("password", {
 									required: "비밀번호를 입력해주세요.",
+									minLength: {
+										value: 6,
+										message: "비밀번호는 최소 6글자 이상이어야 합니다.",
+									},
 									maxLength: {
 										value: 15,
 										message: "비밀번호는 최대 15글자까지 입력 가능합니다.",
@@ -121,6 +128,22 @@ const Signup = () => {
 								placeholder="비밀번호를 입력해주세요."
 							/>
 							{errors.password && <StyledErrorMessage>{errors.password.message}</StyledErrorMessage>}
+						</StyledInputWrapper>
+
+						<StyledInputWrapper>
+							<StyledLabel htmlFor="confirmPassword">비밀번호 확인</StyledLabel>
+							<StyledInput
+								id="confirmPassword"
+								type="password"
+								{...register("confirmPassword", {
+									required: "비밀번호를 다시 입력해주세요.",
+									validate: value => value === password || "비밀번호가 일지하지 않습니다.",
+								})}
+								placeholder="비밀번호를 다시 입력해주세요."
+							/>
+							{errors.confirmPassword && (
+								<StyledErrorMessage>{errors.confirmPassword.message}</StyledErrorMessage>
+							)}
 						</StyledInputWrapper>
 					</StyledFormWrapper>
 
@@ -180,14 +203,14 @@ export const StyledErrorMessage = styled.span`
 `;
 
 export const StyledForm = styled.form`
-	height: 450px;
+	height: 500px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	padding: 20px;
 
 	@media (min-width: 768px) {
-		height: 700px;
+		height: 800px;
 		padding: 60px;
 	}
 `;
