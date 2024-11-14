@@ -28,6 +28,7 @@ const CreateGroup = () => {
 	const navigate = useNavigate();
 	const { tags, setGroupName, addTag, removeTag, setStartDate, setEndDate, setTags } = useGroupStore();
 	const [inputValue, setInputValue] = useState("");
+	const [memberError, setMemberError] = useState<string | null>(null);
 
 	const overlayHeight = useBreakpointValue({ base: "100%", lg: "50vh" });
 	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "60vh" });
@@ -46,6 +47,12 @@ const CreateGroup = () => {
 	}, [setTags]);
 
 	const onSubmit = async (data: CreateGroupData) => {
+		if (tags.length === 0) {
+			setMemberError("멤버를 최소 한 명 이상 추가해주세요.");
+			return;
+		}
+		setMemberError(null);
+
 		const { session } = useAuthStore.getState();
 
 		setGroupName(data.groupName);
@@ -88,7 +95,11 @@ const CreateGroup = () => {
 
 		if (event.key === " " && inputValue.trim() !== "") {
 			event.preventDefault();
-			addTag(inputValue.trim());
+
+			if (tags.length < 10) {
+				addTag(inputValue.trim());
+				setMemberError(null);
+			}
 			setInputValue("");
 		}
 	};
@@ -133,11 +144,11 @@ const CreateGroup = () => {
 									id="member"
 									value={inputValue}
 									onChange={e => setInputValue(e.target.value)}
-									onKeyDown={handleAddTag}
+									onKeyUp={handleAddTag}
 									placeholder="모임 멤버를 입력해주세요."
 								/>
 								<StyledMemberInfo>* 모임멤버 입력 후 스페이스바를 누르면 추가할 수 있습니다😉</StyledMemberInfo>
-								{errors.member && <StyledErrorMessage>{errors.member.message}</StyledErrorMessage>}
+								{memberError && <StyledErrorMessage>{memberError}</StyledErrorMessage>}
 							</StyledInputWrapper>
 
 							<StyledInputWrapper>
