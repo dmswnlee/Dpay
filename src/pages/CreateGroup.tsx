@@ -34,6 +34,8 @@ const CreateGroup = () => {
 	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "60vh" });
 	const tagSize = useBreakpointValue({ base: "sm", lg: "lg" });
 
+	const today = new Date().toISOString().split("T")[0];
+
 	const {
 		register,
 		handleSubmit,
@@ -157,6 +159,7 @@ const CreateGroup = () => {
 									<StyledInput
 										id="startDate"
 										type="date"
+										min={today}
 										{...register("startDate", {
 											required: "모임 시작 날짜를 입력해주세요.",
 										})}
@@ -166,6 +169,7 @@ const CreateGroup = () => {
 									<StyledInput
 										id="endDate"
 										type="date"
+										min={today}
 										{...register("endDate", {
 											required: "모임 종료 날짜를 입력해주세요.",
 										})}
