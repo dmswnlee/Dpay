@@ -11,6 +11,7 @@ import { supabase } from "../supabaseClient";
 import { useBreakpointValue } from "@chakra-ui/react";
 
 interface AddExpenseData {
+	id: number;
 	date: string;
 	desc: string;
 	memo: string;
@@ -30,6 +31,7 @@ const AddExpenseForm = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm<AddExpenseData>({
 		mode: "onChange",
 	});
@@ -72,6 +74,7 @@ const AddExpenseForm = () => {
 		}
 
 		addExpense(data);
+		reset();
 	};
 
 	return (
@@ -83,6 +86,7 @@ const AddExpenseForm = () => {
 							<StyledExpenseInput
 								id="date"
 								type="date"
+								min={startDate}
 								defaultValue={startDate}
 								{...register("date", {
 									required: "날짜를 입력해주세요.",
