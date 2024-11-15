@@ -19,6 +19,10 @@ const ExpenseList = () => {
 	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "75vh" });
 	const overlayHeight = useBreakpointValue({ base: "100%", md: "50vh", lg: "100vh" });
 
+	const formatNumber = (value: number): string => {
+		return new Intl.NumberFormat('ko-KR').format(value);
+	};
+
 	useEffect(() => {
 		const fetchGroupInfo = async () => {
 			if (groupId) {
@@ -105,7 +109,7 @@ const ExpenseList = () => {
 										<StyledTd>{expense.date}</StyledTd>
 										<StyledTd>{expense.desc}</StyledTd>
 										<StyledTd>{expense.member}</StyledTd>
-										<StyledTd>{expense.amount}</StyledTd>
+										<StyledTd>{formatNumber(expense.amount)}</StyledTd>
 										<StyledTd>{expense.memo}</StyledTd>
 										<StyledTd>
 											<StyledButtonGroup>
