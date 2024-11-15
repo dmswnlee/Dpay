@@ -95,7 +95,7 @@ const SettlementSummary = () => {
 	const overlayHeight = useBreakpointValue({ base: "0", lg: "50vh" });
 	const overlayWidth = useBreakpointValue({ base: "90vw", md: "50vw", lg: "50vh" });
 
-	const totalExpenseAmount = expenses.reduce((prevAmount, curExpense) => prevAmount + curExpense.amount, 0);
+	const totalExpenseAmount = expenses.reduce((prevAmount, curExpense) => prevAmount + Number(curExpense.amount), 0);
 	const groupMembersCount = members ? members.length : 0;
 	const splitAmount = Math.floor(totalExpenseAmount / groupMembersCount / 10) * 10;
 
