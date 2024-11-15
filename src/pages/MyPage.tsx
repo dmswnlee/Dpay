@@ -277,14 +277,14 @@ const StyledContent = styled.div`
 	}
 `;
 
-const StyledButtonGroup = styled.div`
+export const StyledButtonGroup = styled.div`
 	width: 80px;
 	height: 30px;
 	display: flex;
 	gap: 20px;
 `;
 
-const StyledButtonWrapper = styled.button`
+export const StyledButtonWrapper = styled.button`
 	width: 30px;
 	height: 30px;
 	background-color: #ffffff;
@@ -307,7 +307,7 @@ const StyledButtonWrapper = styled.button`
 	}
 `;
 
-const StyledAddButtonWrapper = styled.div`
+export const StyledAddButtonWrapper = styled.div`
 	width: 90%;
 	position: fixed;
 	bottom:20px;
