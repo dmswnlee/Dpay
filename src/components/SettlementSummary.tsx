@@ -95,6 +95,10 @@ const SettlementSummary = () => {
 	const overlayHeight = useBreakpointValue({ base: "0", lg: "50vh" });
 	const overlayWidth = useBreakpointValue({ base: "90vw", md: "50vw", lg: "50vh" });
 
+	const formatNumber = (value: number): string => {
+		return new Intl.NumberFormat('ko-KR').format(value);
+	};
+
 	const totalExpenseAmount = expenses.reduce((prevAmount, curExpense) => prevAmount + Number(curExpense.amount), 0);
 	const groupMembersCount = members ? members.length : 0;
 	const splitAmount = Math.floor(totalExpenseAmount / groupMembersCount / 10) * 10;
@@ -128,14 +132,14 @@ const SettlementSummary = () => {
 					{totalExpenseAmount > 0 && groupMembersCount > 0 && (
 						<StyledWrapper>
 							<span>멤버 수: {groupMembersCount}명</span>
-							<span>총 지출 금액 : {totalExpenseAmount}원</span>
-							<span>한 사람당 지출 금액 : {splitAmount}원</span>
+							<span>총 지출 금액 : {formatNumber(totalExpenseAmount)}원</span>
+							<span>한 사람당 지출 금액 : {formatNumber(splitAmount)}원</span>
 							<StyledDivider></StyledDivider>
 							<StyledUl>
 								{minimumTransaction.map(({ sender, receiver, amount }, index) => (
 									<StyledLi key={`transaction-${index}`}>
 										<span>
-											{sender}(이)가 {receiver}에게 {amount}원 보내기
+											{sender}(이)가 {receiver}에게 {formatNumber(amount)}원 보내기
 										</span>
 									</StyledLi>
 								))}
