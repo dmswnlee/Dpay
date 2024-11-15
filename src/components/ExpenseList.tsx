@@ -6,15 +6,18 @@ import { useExpenseStore } from "../store/useExpenseStore";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "../supabaseClient";
+import { StyledButtonGroup, StyledButtonWrapper } from "../pages/MyPage";
+import { RiDeleteBin5Line } from "react-icons/ri";
+//import { FiEdit } from "react-icons/fi";
 
 const ExpenseList = () => {
 	const { groupName, startDate, endDate, setGroupName, setStartDate, setEndDate } = useGroupStore();
 	const { expenses, setExpenses } = useExpenseStore();
 	const { groupId } = useParams();
 
-	const tableSize = useBreakpointValue({ base: "sm", md:"md", lg: "lg" });
+	const tableSize = useBreakpointValue({ base: "sm", md: "md", lg: "lg" });
 	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "75vh" });
-	const overlayHeight = useBreakpointValue({ base: "100%", md:"50vh", lg: "100vh" });
+	const overlayHeight = useBreakpointValue({ base: "100%", md: "50vh", lg: "100vh" });
 
 	useEffect(() => {
 		const fetchGroupInfo = async () => {
@@ -40,8 +43,11 @@ const ExpenseList = () => {
 
 		const fetchExpenses = async () => {
 			if (groupId) {
-				const { data, error } = await supabase.from("expenses").select("*").eq("group_id", groupId);
-
+				const { data, error } = await supabase
+				.from("expenses")
+				.select("*")
+				.eq("group_id", groupId);
+				
 				if (error) {
 					console.error("비용 정보를 가져오는 중 오류가 발생했습니다:", error.message);
 					return;
@@ -56,6 +62,20 @@ const ExpenseList = () => {
 		fetchGroupInfo();
 		fetchExpenses();
 	}, [groupId, setGroupName, setStartDate, setEndDate, setExpenses]);
+
+	const handleDelete = async (expenseId: number) => {
+		const { error } = await supabase
+			.from("expenses")
+			.delete()
+			.eq("id", expenseId);
+	
+		if (error) {
+			console.error("입력된 비용을 삭제하는 중 오류가 발생했습니다.", error.message);
+			return;
+		}
+
+		setExpenses((prevExpenses) => prevExpenses.filter(expense => expense.id !== expenseId));
+	};
 
 	return (
 		<OverlayWrapper width={overlayWidth} minHeight={overlayHeight}>
@@ -76,16 +96,27 @@ const ExpenseList = () => {
 									<StyledTh>결제자</StyledTh>
 									<StyledTh>금액</StyledTh>
 									<StyledTh>메모</StyledTh>
+									<StyledTh></StyledTh>
 								</Tr>
 							</Thead>
 							<Tbody>
-								{expenses.map((expense, index) => (
-									<Tr key={index}>
+								{expenses.map((expense) => (
+									<Tr key={expense.id}>
 										<StyledTd>{expense.date}</StyledTd>
 										<StyledTd>{expense.desc}</StyledTd>
 										<StyledTd>{expense.member}</StyledTd>
 										<StyledTd>{expense.amount}</StyledTd>
 										<StyledTd>{expense.memo}</StyledTd>
+										<StyledTd>
+											<StyledButtonGroup>
+												<StyledButtonWrapper onClick={() => handleDelete(expense.id)}>
+													<RiDeleteBin5Line />
+												</StyledButtonWrapper>
+												{/* <StyledButtonWrapper>
+													<FiEdit />
+												</StyledButtonWrapper> */}
+											</StyledButtonGroup>
+										</StyledTd>
 									</Tr>
 								))}
 							</Tbody>
