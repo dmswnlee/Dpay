@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import OverlayWrapper from "./shared/OverlayWrapper";
 import { HiDownload } from "react-icons/hi";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useExpenseStore } from "../store/useExpenseStore";
 import { useGroupStore } from "../store/useGroupStore";
 import { toPng } from "html-to-image";
 import { useBreakpointValue } from '@chakra-ui/react';
+import { supabase } from '../supabaseClient';
+import { useParams } from 'react-router-dom';
 
 interface Expense {
 	member: string;
@@ -91,6 +93,7 @@ const SettlementSummary = () => {
 	const { expenses } = useExpenseStore();
 	const { tags } = useGroupStore();
 	const members = tags.length > 0 ? tags : [];
+	const { groupId } = useParams<{ groupId: string }>();
 
 	const overlayHeight = useBreakpointValue({ base: "0", lg: "50vh" });
 	const overlayWidth = useBreakpointValue({ base: "90vw", md: "50vw", lg: "50vh" });
@@ -104,6 +107,34 @@ const SettlementSummary = () => {
 	const splitAmount = Math.floor(totalExpenseAmount / groupMembersCount / 10) * 10;
 
 	const minimumTransaction = calculateMinimumTransaction(expenses, members, splitAmount);
+
+	const saveSettlementResult = async () => {
+		try {
+			const { data, error } = await supabase
+				.from("settlement")
+				.upsert(
+					[
+						{
+							group_id: groupId,
+							total_expense: totalExpenseAmount,
+							amount_per_person: splitAmount,
+						},
+					],
+					{ onConflict: "group_id" }
+				);
+
+			if (error) throw error;
+			console.log("정산 결과가 저장되었습니다:", data);
+		} catch (error) {
+			console.error("정산 결과 저장 중 오류 발생:", error);
+		}
+	};
+
+	useEffect(() => {
+		if (totalExpenseAmount > 0 && groupMembersCount > 0) {
+			saveSettlementResult();
+		}
+	}, [totalExpenseAmount, splitAmount]);
 
 	const exportToImage = () => {
 		if (wrapperElement.current === null) {
