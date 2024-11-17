@@ -122,37 +122,41 @@ const MyPage = () => {
 					<div>
 						<StyledTitle>지난 모임 내역</StyledTitle>
 						<StyledScrollableContainer>
-							{groups.map(group => (
-								<StyledCard key={group.id}>
-									<div>
-										<StyledTop>
-											<StyledGroupName>{group.group_name}</StyledGroupName>
-											<StyledButtonGroup>
-												<StyledButtonWrapper onClick={() => onOpen(group.id)}>
-													<RiDeleteBin5Line />
-												</StyledButtonWrapper>
-												<StyledButtonWrapper onClick={() => navigate(`/expense/${group.id}`)}>
-													<MdOutlineMoreVert />
-												</StyledButtonWrapper>
-											</StyledButtonGroup>
-										</StyledTop>
-										<StyledContent>
-											<FaRegCalendarAlt />
-											<p>
-												모임 날짜 : {formatDate(group.start_date)} ~ {formatDate(group.end_date)}
-											</p>
-										</StyledContent>
-										<StyledContent>
-											<FaUserGroup />
-											<p>모임 멤버 : {group.tags.join(", ")}</p>
-										</StyledContent>
-										<StyledContent>
-											<FaMoneyBill />
-											<p>한 사람 당 지출 금액 : 55,000원</p>
-										</StyledContent>
-									</div>
-								</StyledCard>
-							))}
+							{groups.length === 0 ? (
+								<StyledNoGroup>모임 내역이 없습니다.</StyledNoGroup>
+							) : (
+								groups.map(group => (
+									<StyledCard key={group.id}>
+										<div>
+											<StyledTop>
+												<StyledGroupName>{group.group_name}</StyledGroupName>
+												<StyledButtonGroup>
+													<StyledButtonWrapper onClick={() => onOpen(group.id)}>
+														<RiDeleteBin5Line />
+													</StyledButtonWrapper>
+													<StyledButtonWrapper onClick={() => navigate(`/expense/${group.id}`)}>
+														<MdOutlineMoreVert />
+													</StyledButtonWrapper>
+												</StyledButtonGroup>
+											</StyledTop>
+											<StyledContent>
+												<FaRegCalendarAlt />
+												<p>
+													모임 날짜 : {formatDate(group.start_date)} ~ {formatDate(group.end_date)}
+												</p>
+											</StyledContent>
+											<StyledContent>
+												<FaUserGroup />
+												<p>모임 멤버 : {group.tags.join(", ")}</p>
+											</StyledContent>
+											<StyledContent>
+												<FaMoneyBill />
+												<p>한 사람 당 지출 금액 : 55,000원</p>
+											</StyledContent>
+										</div>
+									</StyledCard>
+								))
+							)}
 						</StyledScrollableContainer>
 					</div>
 					<StyledAddButtonWrapper>
@@ -210,6 +214,18 @@ const StyledScrollableContainer = styled.div`
 	}
 `;
 
+const StyledNoGroup = styled.div`
+	height: 170px;
+	background-color: #edf2f7;
+	border-radius: 5px;
+	padding: 20px;
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #a0aec0;
+`;
+
 const StyledUserContainer = styled.div`
 	height: 600px;
 	display: flex;
@@ -256,7 +272,7 @@ const StyledTop = styled.div`
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
-`
+`;
 
 const StyledGroupName = styled.p`
 	font-size: 18px;
@@ -310,7 +326,7 @@ export const StyledButtonWrapper = styled.button`
 export const StyledAddButtonWrapper = styled.div`
 	width: 90%;
 	position: fixed;
-	bottom:20px;
+	bottom: 20px;
 
 	@media (min-width: 768px) {
 		width: 83%;
