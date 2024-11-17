@@ -29,6 +29,7 @@ interface Group {
 	start_date: string;
 	end_date: string;
 	tags: string[];
+	amount_per_person?: number;
 }
 
 const MyPage = () => {
@@ -55,6 +56,7 @@ const MyPage = () => {
 					.select("name")
 					.eq("id", userSession.user.id)
 					.single();
+
 				if (userError) {
 					console.error("사용자 이름을 가져오는 중 오류 발생:", userError.message);
 				} else {
@@ -68,8 +70,25 @@ const MyPage = () => {
 
 				if (groupError) {
 					console.error("그룹 데이터를 가져오는 중 오류 발생:", groupError.message);
-				} else {
-					setGroups(groupData || []);
+				} else if (groupData.length > 0) {
+					const groupIds = groupData.map(group => group.id);
+
+					const { data: settlementData, error: settlementError } = await supabase
+						.from("settlement")
+						.select("group_id, amount_per_person")
+						.in("group_id", groupIds);
+
+					if (settlementError) {
+						console.error("정산 데이터를 가져오는 중 오류 발생:", settlementError.message);
+					} else {
+						const groupsWithAmounts = groupData.map(group => ({
+							...group,
+							amount_per_person:
+								settlementData.find(settlement => settlement.group_id === group.id)?.amount_per_person || 0,
+						}));
+
+						setGroups(groupsWithAmounts);
+					}
 				}
 			}
 			setIsLoading(false);
@@ -81,6 +100,10 @@ const MyPage = () => {
 	const formatDate = (dateString: string) => {
 		const date = new Date(dateString);
 		return format(date, "yy.MM.dd");
+	};
+
+	const formatNumber = (value: number): string => {
+		return new Intl.NumberFormat("ko-KR").format(value);
 	};
 
 	const onOpen = (groupId: string) => {
@@ -151,7 +174,14 @@ const MyPage = () => {
 											</StyledContent>
 											<StyledContent>
 												<FaMoneyBill />
-												<p>한 사람 당 지출 금액 : 55,000원</p>
+												<StyledAmount>
+													한 사람 당 지출 금액 :{" "}
+													{group.amount_per_person ? (
+														<p>{formatNumber(group.amount_per_person)}원</p>
+													) : (
+														<StyledNoAmount>정산 내역 없음</StyledNoAmount>
+													)}
+												</StyledAmount>
 											</StyledContent>
 										</div>
 									</StyledCard>
@@ -223,6 +253,15 @@ const StyledNoGroup = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	color: #a0aec0;
+`;
+
+const StyledAmount = styled.div`
+	display: flex;
+	gap: 5px;
+`;
+
+const StyledNoAmount = styled.p`
 	color: #a0aec0;
 `;
 
