@@ -35,7 +35,7 @@ interface Expense {
 }
 
 const Home = () => {
-	const { session, initializeSession } = useAuthStore();
+	const { session, initializeSession, isSessionInitialized } = useAuthStore();
 	const [isOpen, setIsOpen] = useState(false);
 	const [groups, setGroups] = useState<Group[]>([]);
 	const [expenses, setExpenses] = useState<Record<string, Expense[]>>({});
@@ -46,17 +46,24 @@ const Home = () => {
 	useEffect(() => {
 		const fetchUserSessionAndGroups = async () => {
 			setIsLoading(true);
-			await initializeSession();
-			const userSession = useAuthStore.getState().session;
 
-			if (userSession) {
-				await fetchGroups(userSession.user.id);
+			if (!isSessionInitialized) {
+				await initializeSession();
+			}
+
+			if (session) {
+				await fetchGroups(session.user.id);
+			} else {
+				setGroups([]);
+				setExpenses({});
 			}
 			setIsLoading(false);
 		};
 
-		fetchUserSessionAndGroups();
-	}, []);
+		if (isSessionInitialized) {
+			fetchUserSessionAndGroups();
+		}
+	}, [session, isSessionInitialized]);
 
 	const fetchGroups = async (userId: string) => {
 		const { data, error } = await supabase

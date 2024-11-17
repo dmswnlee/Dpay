@@ -4,6 +4,7 @@ import { Session } from '@supabase/supabase-js';
 
 interface AuthState {
   session: Session | null; 
+	isSessionInitialized: boolean;
   setSession: (session: Session | null) => void; 
   initializeSession: () => Promise<void>; 
   logout: () => Promise<void>; 
@@ -11,10 +12,11 @@ interface AuthState {
 
 const useAuthStore = create<AuthState>((set) => ({
 	session: null,
+	isSessionInitialized: false,
 	setSession: session => set({ session }),
 	initializeSession: async () => {
 		const { data } = await supabase.auth.getSession();
-		set({ session: data.session });
+		set({ session: data.session, isSessionInitialized: true });
 
 		supabase.auth.onAuthStateChange((_event, session) => {
 			set({ session });
