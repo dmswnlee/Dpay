@@ -117,14 +117,33 @@ const MyPage = () => {
 	const handleConfirmDelete = async () => {
 		if (!deleteGroupId) return;
 
-		const { error } = await supabase.from("groups").delete().eq("id", deleteGroupId);
+		try {
+			const { error: expenseError } = await supabase
+				.from("expenses")
+				.delete()
+				.eq("group_id", deleteGroupId);
 
-		if (error) {
-			console.error("모임 삭제 중 오류가 발생했습니다:", error.message);
-		} else {
+			if (expenseError) {
+				console.error("비용 데이터 삭제 중 오류가 발생했습니다:", expenseError.message);
+				return;
+			}
+
+			const { error: groupError } = await supabase
+				.from("groups")
+				.delete()
+				.eq("id", deleteGroupId);
+
+			if (groupError) {
+				console.error("그룹 삭제 중 오류가 발생했습니다:", groupError.message);
+				return;
+			}
+
 			setGroups(prevGroups => prevGroups.filter(group => group.id !== deleteGroupId));
+		} catch (error) {
+			console.error("삭제 중 오류가 발생했습니다:", error);
+		} finally {
+			onClose();
 		}
-		onClose();
 	};
 
 	const handleClick = () => {
