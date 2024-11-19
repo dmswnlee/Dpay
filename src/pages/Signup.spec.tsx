@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Signup from "./Signup";
@@ -24,7 +23,6 @@ const renderComponent = () => {
 	};
 };
 
-// TODO: 각각 테스트하면 성공하고 한꺼번에 하면 실패하는 이유가 무엇인가
 describe("Signup", () => {
 	test("이름, 아이디, 비밀번호 입력 후 가입하기 버튼 클릭 시 폼이 제출된다.", async () => {
 		const { nameInput, idInput, passwordInput, signupButton } = renderComponent();
@@ -34,11 +32,10 @@ describe("Signup", () => {
 		userEvent.type(passwordInput, "password123");
 		userEvent.click(signupButton);
 
-		// TODO: 폼 제출 성공 시 모달 테스트
-		// const sucessMessage = screen.getByText(/회원가입이 완료되었습니다/i);
-		// expect(sucessMessage).toBeInTheDocument();
-		// const AlertDialog = await screen.findByRole("alertdialog");
-		// expect(AlertDialog).toBeInTheDocument();
+		const sucessMessage = screen.getByText(/회원가입이 완료되었습니다/i);
+		expect(sucessMessage).toBeInTheDocument();
+		const AlertDialog = await screen.findByRole("alertdialog");
+		expect(AlertDialog).toBeInTheDocument();
 	});
 
 	test("인풋요소 중 하나라도 빈 인풋이 있는채로 제출 시 오류 메시지가 표시되어야 한다.", async () => {

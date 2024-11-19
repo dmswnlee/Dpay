@@ -36,7 +36,6 @@ const renderComponent = () => {
 	};
 };
 
-// TODO: logo 이미지 테스트 실패 해결
 describe("login", () => {
 	test("아이디, 비밀번호 입력 후 로그인 버튼 클릭 시 로그인이 된다.", async () => {
 		const { idInput, passwordInput, loginButton } = renderComponent();
