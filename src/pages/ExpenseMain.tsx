@@ -2,6 +2,7 @@ import styled from "styled-components";
 import AddExpenseForm from "../components/AddExpenseForm";
 import ExpenseList from "../components/ExpenseList";
 import SettlementSummary from "../components/SettlementSummary";
+import { IoShareSocialOutline } from "react-icons/io5";
 
 const ExpenseMain = () => {
 	const handleSharing = () => {
@@ -10,8 +11,7 @@ const ExpenseMain = () => {
 				url: window.location.href,
 			});
 		} else {
-			navigator.clipboard.writeText(window.location.href)
-			.then(() => {
+			navigator.clipboard.writeText(window.location.href).then(() => {
 				alert("공유 링크가 클립 보드에 복사 되었습니다.");
 			});
 		}
@@ -28,9 +28,11 @@ const ExpenseMain = () => {
 					<ExpenseList />
 				</div>
 			</StyledExpenseWrapper>
-			<button data-testId="share-btn" onClick={handleSharing}>
-				share
-			</button>
+			<StyledShareBtnContainer>
+				<StyledShareBtn data-testId="share-btn" onClick={handleSharing}>
+					<IoShareSocialOutline />
+				</StyledShareBtn>
+			</StyledShareBtnContainer>
 		</StyledExpenseContainer>
 	);
 };
@@ -69,5 +71,31 @@ const StyledLeft = styled.div`
 	@media (min-width: 1024px) {
 		flex-direction: column;
 		gap: 0;
+	}
+`;
+
+const StyledShareBtnContainer = styled.div`
+	position: fixed;
+	right: 40px;
+	bottom: 40px;
+	width: 55px;
+	height: 55px;
+	background-color: #3d8bfd;
+	border-radius: 50%;
+`;
+
+const StyledShareBtn = styled.button`
+	outline: none;
+	border: none;
+	width: 100%;
+	height: 100%;
+	background-color: transparent;
+	font-size: 28px;
+	line-height: 1.4rem;
+	color: #ffffff;
+	text-align: center;
+	cursor: pointer;
+	&:hover {
+		filter: brightness(0.8);
 	}
 `;
