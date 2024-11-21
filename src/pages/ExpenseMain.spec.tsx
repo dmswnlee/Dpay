@@ -182,14 +182,16 @@ describe("ExpenseMain", () => {
 			describe("데스크탑에서", () => {
 				beforeEach(() => {
 					jest.spyOn(navigator.clipboard, "writeText").mockResolvedValue();
-				});
-				test("클릭보드에 링크가 복사된다", async () => {
+			});
+	
+				test("클립보드에 링크가 복사된다", async () => {
+					const writeText = jest.spyOn(navigator.clipboard, "writeText");
 					const { shareButton } = renderComponent();
 
 					await userEvent.click(shareButton);
 
-					expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
-					expect(navigator.clipboard.writeText).toHaveBeenCalledWith(window.location.href);
+					expect(writeText).toHaveBeenCalledTimes(1);
+					expect(writeText).toHaveBeenCalledWith(window.location.href);
 				});
 			});
 		});
