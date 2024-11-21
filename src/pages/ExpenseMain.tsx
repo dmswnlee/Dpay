@@ -27,12 +27,12 @@ const ExpenseMain = () => {
 				<div>
 					<ExpenseList />
 				</div>
+				<StyledShareBtnContainer>
+					<StyledShareBtn data-testId="share-btn" onClick={handleSharing}>
+						<IoShareSocialOutline />
+					</StyledShareBtn>
+				</StyledShareBtnContainer>
 			</StyledExpenseWrapper>
-			<StyledShareBtnContainer>
-				<StyledShareBtn data-testId="share-btn" onClick={handleSharing}>
-					<IoShareSocialOutline />
-				</StyledShareBtn>
-			</StyledShareBtnContainer>
 		</StyledExpenseContainer>
 	);
 };
@@ -75,13 +75,19 @@ const StyledLeft = styled.div`
 `;
 
 const StyledShareBtnContainer = styled.div`
-	position: fixed;
-	right: 40px;
-	bottom: 40px;
-	width: 55px;
-	height: 55px;
+	width: 100%;
 	background-color: #3d8bfd;
-	border-radius: 50%;
+	border-radius: 5px;
+	padding: 10px;
+
+	@media (min-width: 768px) {
+		position: fixed;
+		right: 40px;
+		bottom: 40px;
+		width: 55px;
+		height: 55px;
+		border-radius: 50%;
+	}
 `;
 
 const StyledShareBtn = styled.button`
