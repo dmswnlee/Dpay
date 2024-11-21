@@ -4,6 +4,19 @@ import ExpenseList from "../components/ExpenseList";
 import SettlementSummary from "../components/SettlementSummary";
 
 const ExpenseMain = () => {
+	const handleSharing = () => {
+		if (navigator.userAgent.match(/iphone|android/i) && navigator.share) {
+			navigator.share({
+				url: window.location.href,
+			});
+		} else {
+			navigator.clipboard.writeText(window.location.href)
+			.then(() => {
+				alert("공유 링크가 클립 보드에 복사 되었습니다.");
+			});
+		}
+	};
+
 	return (
 		<StyledExpenseContainer>
 			<StyledExpenseWrapper>
@@ -15,6 +28,9 @@ const ExpenseMain = () => {
 					<ExpenseList />
 				</div>
 			</StyledExpenseWrapper>
+			<button data-testId="share-btn" onClick={handleSharing}>
+				share
+			</button>
 		</StyledExpenseContainer>
 	);
 };
@@ -24,7 +40,8 @@ export default ExpenseMain;
 const StyledExpenseContainer = styled.div`
 	width: 100%;
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
+	align-items: center;
 `;
 
 const StyledExpenseWrapper = styled.div`
@@ -43,14 +60,14 @@ const StyledExpenseWrapper = styled.div`
 `;
 
 const StyledLeft = styled.div`
-@media (min-width: 768px) {
-	width: 100%;
-	display: flex;
-	gap: 10px;
-}
+	@media (min-width: 768px) {
+		width: 100%;
+		display: flex;
+		gap: 10px;
+	}
 
-@media (min-width: 1024px) {
-	flex-direction: column;
-	gap: 0;
-}
-`
+	@media (min-width: 1024px) {
+		flex-direction: column;
+		gap: 0;
+	}
+`;
