@@ -10,7 +10,6 @@ import { StyledButtonGroup, StyledButtonWrapper } from "../pages/MyPage";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useResponsiveOverlay } from '../hooks/useResponsiveOverlay';
 import { FormatNumber } from './shared/FormatNumber';
-//import { FiEdit } from "react-icons/fi";
 
 const ExpenseList = () => {
 	const { groupName, startDate, endDate, setGroupName, setStartDate, setEndDate } = useGroupStore();
@@ -115,9 +114,6 @@ const ExpenseList = () => {
 												<StyledButtonWrapper onClick={() => handleDelete(expense.id)}>
 													<RiDeleteBin5Line />
 												</StyledButtonWrapper>
-												{/* <StyledButtonWrapper>
-													<FiEdit />
-												</StyledButtonWrapper> */}
 											</StyledButtonGroup>
 										</StyledTd>
 									</Tr>
