@@ -8,16 +8,18 @@ import { useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { StyledButtonGroup, StyledButtonWrapper } from "../pages/MyPage";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { useResponsiveOverlay } from '../hooks/useResponsiveOverlay';
 //import { FiEdit } from "react-icons/fi";
 
 const ExpenseList = () => {
 	const { groupName, startDate, endDate, setGroupName, setStartDate, setEndDate } = useGroupStore();
 	const { expenses, setExpenses } = useExpenseStore();
 	const { groupId } = useParams();
-
+	const { overlayWidth, overlayHeight } = useResponsiveOverlay(
+		{ base: "90vw", lg: "75vh" }, 
+    { base: "100%", md: "50vh", lg: "100vh" } 
+  );
 	const tableSize = useBreakpointValue({ base: "sm", md: "md", lg: "lg" });
-	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "75vh" });
-	const overlayHeight = useBreakpointValue({ base: "100%", md: "50vh", lg: "100vh" });
 
 	const formatNumber = (value: number): string => {
 		return new Intl.NumberFormat('ko-KR').format(value);

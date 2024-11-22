@@ -8,16 +8,17 @@ import { useExpenseStore } from "../store/useExpenseStore";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "../supabaseClient";
-import { useBreakpointValue } from "@chakra-ui/react";
 import { AddExpenseData } from '../types/expense';
+import { useResponsiveOverlay } from '../hooks/useResponsiveOverlay';
 
 const AddExpenseForm = () => {
 	const { tags, startDate, setStartDate, setTags } = useGroupStore();
 	const { groupId } = useParams();
 	const { addExpense } = useExpenseStore();
-
-	const overlayHeight = useBreakpointValue({ base: "0", lg: "50vh" });
-	const overlayWidth = useBreakpointValue({ base: "90vw", md: "50vw", lg: "50vh" });
+	const { overlayWidth, overlayHeight } = useResponsiveOverlay(
+		{ base: "90vw", md: "50vw", lg: "50vh" }, 
+    { base: "0", lg: "50vh" }
+  );
 
 	const {
 		register,

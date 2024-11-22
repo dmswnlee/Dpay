@@ -13,14 +13,15 @@ import styled from "styled-components";
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import { useBreakpointValue } from "@chakra-ui/react";
-import { FormData } from '../types/formData';
+import { FormData } from "../types/formData";
+import { useResponsiveOverlay } from "../hooks/useResponsiveOverlay";
 
 const Login = () => {
 	const navigate = useNavigate();
-
-	const overlayHeight = useBreakpointValue({ base: "100%", lg: "50vh" });
-	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "60vh" });
+	const { overlayWidth, overlayHeight } = useResponsiveOverlay(
+		{ base: "90vw", lg: "60vh" },
+		{ base: "100%", lg: "50vh" },
+	);
 
 	const {
 		register,

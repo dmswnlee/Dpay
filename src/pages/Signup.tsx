@@ -13,17 +13,18 @@ import {
 	AlertDialogHeader,
 	AlertDialogOverlay,
 	Button,
-	useBreakpointValue,
 } from "@chakra-ui/react";
 import { FormData } from '../types/formData';
+import { useResponsiveOverlay } from '../hooks/useResponsiveOverlay';
 
 const Signup = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const navigate = useNavigate();
 	const cancelRef = useRef(null);
-
-	const overlayHeight = useBreakpointValue({ base: "100%", lg: "50vh" });
-	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "60vh" });
+	const { overlayWidth, overlayHeight } = useResponsiveOverlay(
+    { base: "90vw", lg: "60vh" }, 
+    { base: "100%", lg: "50vh" }  
+  ); 
 
 	const {
 		register,

@@ -17,17 +17,18 @@ import { useGroupStore } from "../store/useGroupStore";
 import { supabase } from "../supabaseClient";
 import useAuthStore from "../store/authStore";
 import { CreateGroupData } from '../types/group';
+import { useResponsiveOverlay } from '../hooks/useResponsiveOverlay';
 
 const CreateGroup = () => {
 	const navigate = useNavigate();
 	const { tags, setGroupName, addTag, removeTag, setStartDate, setEndDate, setTags } = useGroupStore();
 	const [inputValue, setInputValue] = useState("");
 	const [memberError, setMemberError] = useState<string | null>(null);
-
-	const overlayHeight = useBreakpointValue({ base: "100%", lg: "50vh" });
-	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "60vh" });
+	const { overlayWidth, overlayHeight } = useResponsiveOverlay(
+    { base: "90vw", lg: "60vh" }, 
+    { base: "100%", lg: "50vh" }  
+  );
 	const tagSize = useBreakpointValue({ base: "sm", lg: "lg" });
-
 	const today = new Date().toISOString().split("T")[0];
 
 	const {

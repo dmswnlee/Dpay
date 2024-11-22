@@ -5,11 +5,11 @@ import { useEffect, useRef } from "react";
 import { useExpenseStore } from "../store/useExpenseStore";
 import { useGroupStore } from "../store/useGroupStore";
 import { toPng } from "html-to-image";
-import { useBreakpointValue } from '@chakra-ui/react';
 import { supabase } from '../supabaseClient';
 import { useParams } from 'react-router-dom';
 import { Member } from '../types/group';
 import { Expense, Transaction } from '../types/expense';
+import { useResponsiveOverlay } from '../hooks/useResponsiveOverlay';
 
 export const calculateMinimumTransaction = (
 	expenses: Expense[],
@@ -83,9 +83,10 @@ const SettlementSummary = () => {
 	const { tags } = useGroupStore();
 	const members = tags.length > 0 ? tags : [];
 	const { groupId } = useParams<{ groupId: string }>();
-
-	const overlayHeight = useBreakpointValue({ base: "0", lg: "50vh" });
-	const overlayWidth = useBreakpointValue({ base: "90vw", md: "50vw", lg: "50vh" });
+	const { overlayWidth, overlayHeight } = useResponsiveOverlay(
+		{ base: "90vw", md: "50vw", lg: "50vh" }, 
+    { base: "0", lg: "50vh" } 
+  );
 
 	const formatNumber = (value: number): string => {
 		return new Intl.NumberFormat('ko-KR').format(value);

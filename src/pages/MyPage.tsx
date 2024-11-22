@@ -19,10 +19,10 @@ import {
 	AlertDialogHeader,
 	AlertDialogOverlay,
 	Button,
-	useBreakpointValue,
 } from "@chakra-ui/react";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import { Group } from '../types/group';
+import { useResponsiveOverlay } from '../hooks/useResponsiveOverlay';
 
 const MyPage = () => {
 	const { initializeSession } = useAuthStore();
@@ -32,9 +32,10 @@ const MyPage = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const cancelRef = useRef(null);
 	const navigate = useNavigate();
-
-	const overlayHeight = useBreakpointValue({ base: "100%", lg: "50vh" });
-	const overlayWidth = useBreakpointValue({ base: "90vw", lg: "60vh" });
+	const { overlayWidth, overlayHeight } = useResponsiveOverlay(
+    { base: "90vw", lg: "60vh" }, 
+    { base: "100%", lg: "50vh" }  
+  );
 
 	useEffect(() => {
 		const fetchUserNameAndGroups = async () => {
