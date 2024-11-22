@@ -16,13 +16,7 @@ import styled from "styled-components";
 import { useGroupStore } from "../store/useGroupStore";
 import { supabase } from "../supabaseClient";
 import useAuthStore from "../store/authStore";
-
-interface CreateGroupData {
-	groupName: string;
-	member: string[];
-	startDate: string;
-	endDate: string;
-}
+import { CreateGroupData } from '../types/group';
 
 const CreateGroup = () => {
 	const navigate = useNavigate();

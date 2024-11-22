@@ -8,19 +8,8 @@ import { toPng } from "html-to-image";
 import { useBreakpointValue } from '@chakra-ui/react';
 import { supabase } from '../supabaseClient';
 import { useParams } from 'react-router-dom';
-
-interface Expense {
-	member: string;
-	amount: number;
-}
-
-type Member = string;
-
-interface Transaction {
-	receiver: string;
-	sender: string;
-	amount: number;
-}
+import { Member } from '../types/group';
+import { Expense, Transaction } from '../types/expense';
 
 export const calculateMinimumTransaction = (
 	expenses: Expense[],

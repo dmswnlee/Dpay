@@ -14,11 +14,7 @@ import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { useBreakpointValue } from "@chakra-ui/react";
-
-interface LoginFormData {
-	email: string;
-	password: string;
-}
+import { FormData } from '../types/formData';
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -30,11 +26,11 @@ const Login = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<LoginFormData>({
+	} = useForm<FormData>({
 		mode: "onChange",
 	});
 
-	const onSubmit = async (data: LoginFormData) => {
+	const onSubmit = async (data: FormData) => {
 		const { email, password } = data;
 
 		const { error } = await supabase.auth.signInWithPassword({

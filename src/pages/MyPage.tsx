@@ -22,15 +22,7 @@ import {
 	useBreakpointValue,
 } from "@chakra-ui/react";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
-
-interface Group {
-	id: string;
-	group_name: string;
-	start_date: string;
-	end_date: string;
-	tags: string[];
-	amount_per_person?: number;
-}
+import { Group } from '../types/group';
 
 const MyPage = () => {
 	const { initializeSession } = useAuthStore();

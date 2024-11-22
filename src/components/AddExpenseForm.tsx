@@ -9,15 +9,7 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { useBreakpointValue } from "@chakra-ui/react";
-
-interface AddExpenseData {
-	id: number;
-	date: string;
-	desc: string;
-	memo: string;
-	amount: number;
-	member: string;
-}
+import { AddExpenseData } from '../types/expense';
 
 const AddExpenseForm = () => {
 	const { tags, startDate, setStartDate, setTags } = useGroupStore();
@@ -39,7 +31,10 @@ const AddExpenseForm = () => {
 	useEffect(() => {
 		const fetchGroupInfo = async () => {
 			if (groupId) {
-				const { data, error } = await supabase.from("groups").select("start_date, tags").eq("id", groupId).single();
+				const { data, error } = await supabase
+					.from("groups")
+					.select("start_date, tags")
+					.eq("id", groupId).single();
 
 				if (error) {
 					console.error("그룹 정보를 가져오는 중 오류가 발생했습니다:", error.message);

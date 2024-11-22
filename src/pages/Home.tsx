@@ -18,21 +18,8 @@ import { FaRegCalendarAlt, FaMoneyBill } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
 import { format } from "date-fns";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
-
-interface Group {
-	id: string;
-	group_name: string;
-	start_date: string;
-	end_date: string;
-	tags: string[];
-}
-
-interface Expense {
-	date: string;
-	desc: string;
-	amount: number;
-	member: string;
-}
+import { Group } from '../types/group';
+import { Expense } from '../types/expense';
 
 const Home = () => {
 	const { session, initializeSession, isSessionInitialized } = useAuthStore();

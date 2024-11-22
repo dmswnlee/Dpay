@@ -15,13 +15,7 @@ import {
 	Button,
 	useBreakpointValue,
 } from "@chakra-ui/react";
-
-interface SignupFormData {
-	name: string;
-	email: string;
-	password: string;
-	confirmPassword: string;
-}
+import { FormData } from '../types/formData';
 
 const Signup = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,13 +30,13 @@ const Signup = () => {
 		handleSubmit,
 		watch,
 		formState: { errors },
-	} = useForm<SignupFormData>({
+	} = useForm<FormData>({
 		mode: "onChange",
 	});
 
 	const password = watch("password");
 
-	const onSubmit = async (data: SignupFormData) => {
+	const onSubmit = async (data: FormData) => {
 		const { name, email, password } = data;
 
 		const { data: signUpData, error } = await supabase.auth.signUp({
