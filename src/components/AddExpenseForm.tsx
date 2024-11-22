@@ -53,7 +53,9 @@ const AddExpenseForm = () => {
 	}, [groupId, setStartDate, setTags]);
 
 	const onSubmit = async (data: AddExpenseData) => {
-		const { error } = await supabase.from("expenses").insert([
+		const { error } = await supabase
+			.from("expenses")
+			.insert([
 			{
 				group_id: groupId,
 				date: data.date,

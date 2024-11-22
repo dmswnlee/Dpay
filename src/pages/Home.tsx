@@ -16,10 +16,11 @@ import {
 import { supabase } from "../supabaseClient";
 import { FaRegCalendarAlt, FaMoneyBill } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
-import { format } from "date-fns";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import { Group } from '../types/group';
 import { Expense } from '../types/expense';
+import { FormatDate } from '../components/shared/FormatDate';
+import { FormatNumber } from '../components/shared/FormatNumber';
 
 const Home = () => {
 	const { session, initializeSession, isSessionInitialized } = useAuthStore();
@@ -98,11 +99,6 @@ const Home = () => {
 		}
 	};
 
-	const formatDate = (dateString: string) => {
-		const date = new Date(dateString);
-		return format(date, "yy.MM.dd");
-	};
-
 	if (isLoading) {
 		return <LoadingSpinner />;
 	}
@@ -122,7 +118,7 @@ const Home = () => {
 							<StyledDivider></StyledDivider>
 							<StyledContent>
 								<FaRegCalendarAlt />
-								<p>모임 날짜 : {`${formatDate(group.start_date)} ~ ${formatDate(group.end_date)}`}</p>
+								<p>모임 날짜 : {`${FormatDate(group.start_date)} ~ ${FormatDate(group.end_date)}`}</p>
 							</StyledContent>
 							<StyledContent>
 								<FaUserGroup />
@@ -140,7 +136,7 @@ const Home = () => {
 										<StyledExpense key={index}>
 											<p>{expense.date}</p>
 											<p>{expense.desc}</p>
-											<p>{expense.amount}원</p>
+											<p>{FormatNumber(expense.amount)}원</p>
 											<p>{expense.member}</p>
 											{expenses[group.id]?.length > 1 && <p>...</p>}
 										</StyledExpense>

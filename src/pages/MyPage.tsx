@@ -9,7 +9,6 @@ import FormButton from "../components/shared/FormButton";
 import useAuthStore from "../store/authStore";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import {
 	AlertDialog,
@@ -23,6 +22,8 @@ import {
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import { Group } from '../types/group';
 import { useResponsiveOverlay } from '../hooks/useResponsiveOverlay';
+import { FormatDate } from '../components/shared/FormatDate';
+import { FormatNumber } from '../components/shared/FormatNumber';
 
 const MyPage = () => {
 	const { initializeSession } = useAuthStore();
@@ -89,15 +90,6 @@ const MyPage = () => {
 
 		fetchUserNameAndGroups();
 	}, []);
-
-	const formatDate = (dateString: string) => {
-		const date = new Date(dateString);
-		return format(date, "yy.MM.dd");
-	};
-
-	const formatNumber = (value: number): string => {
-		return new Intl.NumberFormat("ko-KR").format(value);
-	};
 
 	const onOpen = (groupId: string) => {
 		setDeleteGroupId(groupId);
@@ -177,7 +169,7 @@ const MyPage = () => {
 											<StyledContent>
 												<FaRegCalendarAlt />
 												<p>
-													모임 날짜 : {formatDate(group.start_date)} ~ {formatDate(group.end_date)}
+													모임 날짜 : {FormatDate(group.start_date)} ~ {FormatDate(group.end_date)}
 												</p>
 											</StyledContent>
 											<StyledContent>
@@ -189,7 +181,7 @@ const MyPage = () => {
 												<StyledAmount>
 													한 사람 당 지출 금액 :{" "}
 													{group.amount_per_person ? (
-														<p>{formatNumber(group.amount_per_person)}원</p>
+														<p>{FormatNumber(group.amount_per_person)}원</p>
 													) : (
 														<StyledNoAmount>정산 내역 없음</StyledNoAmount>
 													)}

@@ -146,7 +146,6 @@ const Signup = () => {
 				</StyledForm>
 			</OverlayWrapper>
 
-			{/* 회원가입 완료 팝업 */}
 			<AlertDialog
 				isOpen={isModalOpen}
 				leastDestructiveRef={cancelRef}

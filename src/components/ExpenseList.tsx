@@ -9,6 +9,7 @@ import { supabase } from "../supabaseClient";
 import { StyledButtonGroup, StyledButtonWrapper } from "../pages/MyPage";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useResponsiveOverlay } from '../hooks/useResponsiveOverlay';
+import { FormatNumber } from './shared/FormatNumber';
 //import { FiEdit } from "react-icons/fi";
 
 const ExpenseList = () => {
@@ -20,10 +21,6 @@ const ExpenseList = () => {
     { base: "100%", md: "50vh", lg: "100vh" } 
   );
 	const tableSize = useBreakpointValue({ base: "sm", md: "md", lg: "lg" });
-
-	const formatNumber = (value: number): string => {
-		return new Intl.NumberFormat('ko-KR').format(value);
-	};
 
 	useEffect(() => {
 		const fetchGroupInfo = async () => {
@@ -111,7 +108,7 @@ const ExpenseList = () => {
 										<StyledTd>{expense.date}</StyledTd>
 										<StyledTd>{expense.desc}</StyledTd>
 										<StyledTd>{expense.member}</StyledTd>
-										<StyledTd>{formatNumber(expense.amount)}</StyledTd>
+										<StyledTd>{FormatNumber(expense.amount)}</StyledTd>
 										<StyledTd>{expense.memo}</StyledTd>
 										<StyledTd>
 											<StyledButtonGroup>
