@@ -197,14 +197,14 @@ export const StyledErrorMessage = styled.span`
 `;
 
 export const StyledForm = styled.form`
-	height: 500px;
+	height: 550px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	padding: 20px;
 
 	@media (min-width: 768px) {
-		height: 800px;
+		height: 850px;
 		padding: 60px;
 	}
 `;
